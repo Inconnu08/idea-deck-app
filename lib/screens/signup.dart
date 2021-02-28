@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,13 +17,22 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final passwordKey = GlobalKey<FormFieldState>();
   bool _loading = false;
   var formValues = {};
   final _passwordFocusNode = FocusNode();
+  final _fullNameNode = FocusNode();
+  final _phoneFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
 
   @override
   void dispose() {
     _passwordFocusNode.dispose();
+    _fullNameNode.dispose();
+    _phoneFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
 
@@ -231,28 +239,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           key: _formKey,
                           child: Column(
                             children: [
+                              buildNameFormField(),
+                              SizedBox(
+                                  height: getProportionateScreenHeight(20)),
                               buildPhoneFormField(),
+                              SizedBox(
+                                  height: getProportionateScreenHeight(20)),
+                              buildEmailFormField(),
                               SizedBox(
                                   height: getProportionateScreenHeight(20)),
                               buildPasswordFormField(),
                               SizedBox(
                                   height: getProportionateScreenHeight(20)),
-                              Row(
-                                children: [
-                                  Spacer(),
-                                  InkWell(
-                                    // onTap: () => Navigator.pushNamed(
-                                    //     context, ForgotPasswordScreen.routeName),
-                                    onTap: () => print("object"),
-                                    customBorder: StadiumBorder(),
-                                    child: Text(
-                                      "Forgot Password?",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  )
-                                ],
-                              ),
+                              buildConfirmPasswordFormField(),
                               SizedBox(
                                   height: getProportionateScreenHeight(20)),
                             ],
@@ -274,7 +273,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             width: 200,
                             child: ThemeButton(
                               color: buttonColor,
-                              text: "Connect",
+                              text: "Signup",
                               ontap: () => _saveForm(),
                             ),
                           ),
@@ -291,24 +290,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   TextFormField buildPasswordFormField() {
     return TextFormField(
+        key: passwordKey,
+        obscureText: true,
+        focusNode: _passwordFocusNode,
+        onSaved: (newValue) => formValues['password'] = newValue,
+        onChanged: (value) {
+          if (value.isNotEmpty) {
+            // removeError(error: kPassNullError);
+          } else if (value.length >= 8) {
+            // removeError(error: kShortPassError);
+          }
+          return null;
+        },
+        validator: (value) => validateEmpty(value),
+        decoration: InputDecoration(
+          labelText: "Password",
+          labelStyle: const TextStyle(color: kPrimaryColor),
+          // hintText: "Enter your password",
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
+        ),
+        onFieldSubmitted: (_) {
+          FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
+        });
+  }
+
+  TextFormField buildConfirmPasswordFormField() {
+    return TextFormField(
       obscureText: true,
-      focusNode: _passwordFocusNode,
-      onSaved: (newValue) => formValues['password'] = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          // removeError(error: kPassNullError);
-        } else if (value.length >= 8) {
-          // removeError(error: kShortPassError);
+      focusNode: _confirmPasswordFocusNode,
+      validator: (confirmation) {
+        if (confirmation != passwordKey.currentState.value) {
+          return 'Passwords do not match.';
         }
         return null;
       },
-      validator: (value) => validateEmpty(value),
       decoration: InputDecoration(
-        labelText: "Password",
+        labelText: "Confirm Password",
         labelStyle: const TextStyle(color: kPrimaryColor),
-        // hintText: "Enter your password",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
       ),
     );
   }
@@ -316,22 +336,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextFormField buildPhoneFormField() {
     return TextFormField(
       keyboardType: TextInputType.phone,
+      focusNode: _phoneFocusNode,
       validator: (value) => validateMobile(value),
       onSaved: (newValue) => formValues['phone'] = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          // removeError(error: kEmailNullError);
-        } else if (emailValidatorRegExp.hasMatch(value)) {
-          // removeError(error: kInvalidEmailError);
-        }
-        return null;
-      },
       decoration: InputDecoration(
         labelText: "Phone",
         labelStyle: const TextStyle(color: kPrimaryColor),
-        // hintText: "Enter your phone number",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
+      ),
+      onFieldSubmitted: (_) {
+        FocusScope.of(context).requestFocus(_emailFocusNode);
+      },
+    );
+  }
+
+  TextFormField buildNameFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      validator: (value) => validateEmpty(value),
+      onSaved: (newValue) => formValues['full_name'] = newValue,
+      decoration: InputDecoration(
+        labelText: "Full name",
+        labelStyle: const TextStyle(color: kPrimaryColor),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
+      onFieldSubmitted: (_) {
+        FocusScope.of(context).requestFocus(_phoneFocusNode);
+      },
+    );
+  }
+
+  TextFormField buildEmailFormField() {
+    return TextFormField(
+      focusNode: _emailFocusNode,
+      keyboardType: TextInputType.emailAddress,
+      validator: (value) => validateEmpty(value),
+      onSaved: (newValue) => formValues['email'] = newValue,
+      decoration: InputDecoration(
+        labelText: "Email",
+        labelStyle: const TextStyle(color: kPrimaryColor),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
       onFieldSubmitted: (_) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
