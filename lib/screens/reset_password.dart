@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,41 +6,26 @@ import 'package:progress_indicators/progress_indicators.dart';
 
 import '../button.dart';
 import '../constants.dart';
+import 'signup.dart';
 import '../size_config.dart';
 import '../utils/validators.dart';
 
-class SignUpScreen extends StatefulWidget {
-  static String routeName = "/sign-up";
+class ResetPasswordScreen extends StatefulWidget {
+  static String routeName = "/password-reset";
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final passwordKey = GlobalKey<FormFieldState>();
   bool _loading = false;
-  double heightFactor;
   var formValues = {};
   final _passwordFocusNode = FocusNode();
-  final _fullNameNode = FocusNode();
-  final _phoneFocusNode = FocusNode();
-  final _emailFocusNode = FocusNode();
-  final _confirmPasswordFocusNode = FocusNode();
-
-  @override
-  void initState() {
-    heightFactor = SizeConfig.screenHeight;
-    super.initState();
-  }
 
   @override
   void dispose() {
     _passwordFocusNode.dispose();
-    _fullNameNode.dispose();
-    _phoneFocusNode.dispose();
-    _emailFocusNode.dispose();
-    _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
 
@@ -176,12 +162,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     // print("Screen");
     // print(SizeConfig.screenWidth * 0.1556);
-    // print(SizeConfig.imageSizeMultiplier * 50);
-    // print(Theme.of(context).textTheme.headline1.toString());
-    print("sign up build");
+    print(SizeConfig.imageSizeMultiplier * 50);
+    print(Theme.of(context).textTheme.headline1.toString());
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -189,53 +174,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
+                  SizedBox(height: SizeConfig.screenHeight * 0.04),
                   Text(
-                    "Sign up",
+                    "Forgot password?",
                     textAlign: TextAlign.left,
                     style: Theme.of(context)
                         .textTheme
                         .headline6
                         .copyWith(color: kPrimaryColor),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   Text(
-                    "Idea Deck",
+                    "Enter the email you registered your account with and we will send you a link to reset your password. ",
                     style: Theme.of(context)
                         .textTheme
-                        .headline1
-                        .copyWith(color: kPrimaryColor),
-                  ),
-                  const SizedBox(height: 10),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Enter the following details to ",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(color: Colors.grey),
-                        ),
-                        TextSpan(
-                          text: "create ",
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Colors.grey, fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text: "your account.",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(color: Colors.grey),
-                        ),
-                      ],
-                    ),
+                        .headline5
+                        .copyWith(color: Colors.grey),
                   ),
                   Container(
                     padding:
@@ -243,24 +201,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
                         Form(
                           key: _formKey,
                           child: Column(
                             children: [
-                              buildNameFormField(),
-                              SizedBox(
-                                  height: getProportionateScreenHeight(20)),
                               buildPhoneFormField(),
                               SizedBox(
                                   height: getProportionateScreenHeight(20)),
-                              buildEmailFormField(),
-                              SizedBox(
-                                  height: getProportionateScreenHeight(20)),
-                              buildPasswordFormField(),
-                              SizedBox(
-                                  height: getProportionateScreenHeight(20)),
-                              buildConfirmPasswordFormField(),
                               SizedBox(
                                   height: getProportionateScreenHeight(20)),
                             ],
@@ -269,7 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: SizeConfig.screenHeight * 0.05),
                   _loading
                       ? Center(
                           child: JumpingDotsProgressIndicator(
@@ -282,12 +230,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             width: 200,
                             child: ThemeButton(
                               color: buttonColor,
-                              text: "Signup",
+                              text: "Send",
                               ontap: () => _saveForm(),
                             ),
                           ),
                         ),
-                  SizedBox(height: 20),
+                  SizedBox(height: getProportionateScreenHeight(20)),
                 ],
               ),
             ),
@@ -299,45 +247,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   TextFormField buildPasswordFormField() {
     return TextFormField(
-        key: passwordKey,
-        obscureText: true,
-        focusNode: _passwordFocusNode,
-        onSaved: (newValue) => formValues['password'] = newValue,
-        onChanged: (value) {
-          if (value.isNotEmpty) {
-            // removeError(error: kPassNullError);
-          } else if (value.length >= 8) {
-            // removeError(error: kShortPassError);
-          }
-          return null;
-        },
-        validator: (value) => validateEmpty(value),
-        decoration: const InputDecoration(
-          labelText: "Password",
-          labelStyle: const TextStyle(color: kPrimaryColor),
-          // hintText: "Enter your password",
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-        ),
-        onFieldSubmitted: (_) {
-          FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
-        });
-  }
-
-  TextFormField buildConfirmPasswordFormField() {
-    return TextFormField(
       obscureText: true,
-      focusNode: _confirmPasswordFocusNode,
-      validator: (confirmation) {
-        if (confirmation != passwordKey.currentState.value) {
-          return 'Passwords do not match.';
+      focusNode: _passwordFocusNode,
+      onSaved: (newValue) => formValues['password'] = newValue,
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          // removeError(error: kPassNullError);
+        } else if (value.length >= 8) {
+          // removeError(error: kShortPassError);
         }
         return null;
       },
-      decoration: const InputDecoration(
-        labelText: "Confirm Password",
+      validator: (value) => validateEmpty(value),
+      decoration: InputDecoration(
+        labelText: "Password",
         labelStyle: const TextStyle(color: kPrimaryColor),
+        // hintText: "Enter your password",
         floatingLabelBehavior: FloatingLabelBehavior.always,
+        // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
       ),
     );
   }
@@ -345,46 +272,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextFormField buildPhoneFormField() {
     return TextFormField(
       keyboardType: TextInputType.phone,
-      focusNode: _phoneFocusNode,
       validator: (value) => validateMobile(value),
       onSaved: (newValue) => formValues['phone'] = newValue,
-      decoration: const InputDecoration(
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          // removeError(error: kEmailNullError);
+        } else if (emailValidatorRegExp.hasMatch(value)) {
+          // removeError(error: kInvalidEmailError);
+        }
+        return null;
+      },
+      decoration: InputDecoration(
         labelText: "Phone",
         labelStyle: const TextStyle(color: kPrimaryColor),
+        // hintText: "Enter your phone number",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
-      onFieldSubmitted: (_) {
-        FocusScope.of(context).requestFocus(_emailFocusNode);
-      },
-    );
-  }
-
-  TextFormField buildNameFormField() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      validator: (value) => validateEmpty(value),
-      onSaved: (newValue) => formValues['full_name'] = newValue,
-      decoration: const InputDecoration(
-        labelText: "Full name",
-        labelStyle: const TextStyle(color: kPrimaryColor),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
-      onFieldSubmitted: (_) {
-        FocusScope.of(context).requestFocus(_phoneFocusNode);
-      },
-    );
-  }
-
-  TextFormField buildEmailFormField() {
-    return TextFormField(
-      focusNode: _emailFocusNode,
-      keyboardType: TextInputType.emailAddress,
-      validator: (value) => validateEmpty(value),
-      onSaved: (newValue) => formValues['email'] = newValue,
-      decoration: const InputDecoration(
-        labelText: "Email",
-        labelStyle: const TextStyle(color: kPrimaryColor),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
+        // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
       ),
       onFieldSubmitted: (_) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);

@@ -2,13 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:idea_deck/screens/signup.dart';
-import 'package:idea_deck/utils/validators.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
 import '../button.dart';
 import '../constants.dart';
+import '../screens/reset_password.dart';
+import '../screens/signup.dart';
 import '../size_config.dart';
+import '../utils/validators.dart';
 
 class SignInScreen extends StatefulWidget {
   static String routeName = "/sign-in";
@@ -239,9 +240,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                 children: [
                                   Spacer(),
                                   InkWell(
-                                    // onTap: () => Navigator.pushNamed(
-                                    //     context, ForgotPasswordScreen.routeName),
-                                    onTap: () => print("object"),
+                                    onTap: () => Navigator.pushNamed(
+                                        context, ResetPasswordScreen.routeName),
                                     customBorder: StadiumBorder(),
                                     child: Text(
                                       "Forgot Password?",
