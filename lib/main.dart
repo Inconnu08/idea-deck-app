@@ -1,8 +1,10 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 
+import './routes.dart';
+import './screens/splash.dart';
 import './size_config.dart';
-import './splash.dart';
+import './theme.dart';
 
 main() {
   runApp(DevicePreview(
@@ -21,9 +23,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Drawing Paths',
+      title: 'Idea Deck',
       debugShowCheckedModeBanner: false,
-      home: Splash(),
+      theme: theme(),
+      home: SplashScreen(),
+      routes: routes,
     );
   }
 }

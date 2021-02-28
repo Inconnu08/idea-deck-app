@@ -1,13 +1,18 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import './home.dart';
 
-class Splash extends StatefulWidget {
+import 'package:flutter/material.dart';
+
+import '../home.dart';
+import 'intro.dart';
+
+class SplashScreen extends StatefulWidget {
+  static String routeName = "/splash";
+
   @override
-  VideoState createState() => VideoState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class VideoState extends State<Splash> with SingleTickerProviderStateMixin {
+class SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   var _visible = true;
   AnimationController animationController;
   Animation<double> animation;
@@ -19,7 +24,7 @@ class VideoState extends State<Splash> with SingleTickerProviderStateMixin {
 
   void navigationPage() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => HomeScreen(),
+      builder: (context) => IntroScreen(),
     ));
   }
 

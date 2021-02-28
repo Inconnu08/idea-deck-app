@@ -37,7 +37,7 @@ class SizeConfig {
     heightMultiplier = _blockHeight;
     widthMultiplier = _blockWidth;
 
-    print(screenWidth);
+    print("Screen width: $screenWidth");
   }
 }
 
