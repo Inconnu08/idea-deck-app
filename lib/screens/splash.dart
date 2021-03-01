@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../home.dart';
+import 'home.dart';
 import 'intro.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,7 +24,7 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
 
   void navigationPage() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => IntroScreen(),
+      builder: (context) => HomeScreen(),
     ));
   }
 

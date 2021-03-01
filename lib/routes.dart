@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:idea_deck/screens/home.dart';
 
 import 'screens/reset_password.dart';
 import './screens/signin.dart';
@@ -10,4 +11,5 @@ final Map<String, WidgetBuilder> routes = {
   SignInScreen.routeName: (context) => SignInScreen(),
   SignUpScreen.routeName: (context) => SignUpScreen(),
   ResetPasswordScreen.routeName: (context) => ResetPasswordScreen(),
+  HomeScreen.routeName: (context) => HomeScreen(),
 };
