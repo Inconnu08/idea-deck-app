@@ -72,10 +72,9 @@ class AppTheme {
   );
 
   static final TextStyle _subTitleLight = TextStyle(
-    color: subTitleTextColor,
-    fontSize: 2 * SizeConfig.textMultiplier,
-    height: 1.5,
-  );
+      fontSize: 4 * SizeConfig.textMultiplier,
+      fontWeight: FontWeight.w900,
+      color: kPrimaryColor);
 
   static final TextStyle _buttonLight = TextStyle(
     color: Colors.black,
