@@ -11,7 +11,7 @@ main() {
   // debugPaintSizeEnabled=true;
   runApp(DevicePreview(
     // enabled: !kReleaseMode,
-    enabled: true,
+    enabled: false,
     builder: (context) => LayoutBuilder(builder: (context, constraints) {
       return OrientationBuilder(builder: (context, orientation) {
         SizeConfig().init(constraints, orientation);

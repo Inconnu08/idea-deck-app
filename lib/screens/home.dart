@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:idea_deck/models/ads.dart';
 
 import '../constants.dart';
+import '../models/ads.dart';
 import '../size_config.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(actions: <Widget>[
-        CircleAvatar(),
+        CircleAvatar(radius: 16),
         Padding(
           padding: const EdgeInsets.only(right: 16),
           child: IconButton(
@@ -50,8 +50,29 @@ class _HomeScreenState extends State<HomeScreen> {
                       .headline1
                       .copyWith(color: kPrimaryColor),
                 ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                          padding: const EdgeInsets.only(
+                              bottom: 16.0, left: 16.0, right: 16.0),
+                          width: MediaQuery.of(context).size.width / 2.1,
+                          child: Text("Search",
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w100,
+                                  color: Colors.grey))),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: IconButton(
+                            icon: Icon(Icons.filter_list, size: 36),
+                            onPressed: null),
+                      ),
+                    ]),
+
                 Container(
-                  height: MediaQuery.of(context).size.height / 1.5,
+                  height: MediaQuery.of(context).size.height / 1.6,
                   width: double.infinity,
                   child: ads.isEmpty
                       ? Center(
@@ -110,7 +131,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Container(
-                                          padding: const EdgeInsets.all(16.0),
+                                          padding: const EdgeInsets.only(
+                                              top: 16.0,
+                                              left: 16.0,
+                                              right: 16.0),
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width /
@@ -122,11 +146,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   fontWeight: FontWeight.w100)),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Text('৳${a.offerEnds}',
+                                          padding: const EdgeInsets.only(
+                                              top: 16.0,
+                                              left: 16.0,
+                                              right: 16.0),
+                                          child: Text('${a.offerEnds}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold)),
                                         ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 16.0,
+                                              left: 16.0,
+                                              right: 16.0),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.1,
+                                          child: Text(a.brand,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w100,
+                                                  color: Colors.grey)),
+                                        ),
+                                        // Padding(
+                                        //   padding: const EdgeInsets.only(bottom:16, left: 16.0, right:16.0),
+                                        //   child: Text('${a.offerEnds}',
+                                        //       style: TextStyle(
+                                        //           fontWeight: FontWeight.bold)),
+                                        // ),
                                       ],
                                     ),
                                     // ExpandIcon(
