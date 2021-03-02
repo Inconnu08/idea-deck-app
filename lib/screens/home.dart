@@ -1,6 +1,7 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:idea_deck/screens/profile.dart';
 
 import '../constants.dart';
 import '../models/ads.dart';
@@ -39,8 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
     print(Theme.of(context).textTheme.headline1.toString());
 
     return Scaffold(
-        appBar: AppBar(
-            actions: <Widget>[CircleAvatar(radius: 16), SizedBox(width: 16)]),
+        appBar: AppBar(actions: <Widget>[
+          InkWell(
+            child: CircleAvatar(radius: 16),
+            onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
+          ),
+          SizedBox(width: 16)
+        ]),
         body: SizedBox.expand(
           child: PageView(
             controller: _pageController,
