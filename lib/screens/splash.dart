@@ -12,14 +12,15 @@ class SplashScreen extends StatefulWidget {
   SplashScreenState createState() => SplashScreenState();
 }
 
-class SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   var _visible = true;
   AnimationController animationController;
   Animation<double> animation;
 
   startTime() async {
-    var _duration = new Duration(seconds: 2);
-    return new Timer(_duration, navigationPage);
+    var _duration = Duration(seconds: 2);
+    return Timer(_duration, navigationPage);
   }
 
   void navigationPage() {
@@ -31,10 +32,10 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
-    animationController = new AnimationController(
-        vsync: this, duration: new Duration(seconds: 1));
+    animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
     animation =
-        new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
+        CurvedAnimation(parent: animationController, curve: Curves.easeOut);
 
     animation.addListener(() => this.setState(() {}));
     animationController.forward();
@@ -52,10 +53,10 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          new Column(
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Image.asset(
+              Image.asset(
                 'assets/devs.jpg',
                 width: animation.value * 250,
                 height: animation.value * 250,

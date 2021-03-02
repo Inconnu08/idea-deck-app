@@ -72,7 +72,7 @@ class AppTheme {
   );
 
   static final TextStyle _subTitleLight = TextStyle(
-      fontSize: 4 * SizeConfig.textMultiplier,
+      fontSize: 3.5 * SizeConfig.textMultiplier,
       fontWeight: FontWeight.w900,
       color: kPrimaryColor);
 

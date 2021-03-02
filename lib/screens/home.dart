@@ -49,14 +49,59 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             children: <Widget>[
               AdvertisementFeed(),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.green,
-              ),
-              Container(
-                color: Colors.blue,
+              const LeaderBoard(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Notifications",
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Card(
+                            elevation: 8,
+                            color: kAccent,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                leading:
+                                    Icon(Icons.explicit, color: kPrimaryColor),
+                                title: Text(
+                                  "Congratulations! You won the draw for something!",
+                                  style: TextStyle(
+                                      color: kPrimaryColor,
+                                      fontWeight: FontWeight.w100),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Card(
+                            elevation: 8,
+                            color: kAccent,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                leading: Icon(
+                                    Icons.swap_horizontal_circle_rounded,
+                                    color: kPrimaryColor),
+                                title: Text(
+                                  "You have been entered to the draw!",
+                                  style: TextStyle(
+                                      color: kPrimaryColor,
+                                      fontWeight: FontWeight.w100),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]),
+                  ],
+                ),
               ),
             ],
           ),
@@ -92,6 +137,132 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ],
         ));
+  }
+}
+
+class LeaderBoard extends StatelessWidget {
+  const LeaderBoard({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          top: 0.0,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: MediaQuery.of(context).orientation == Orientation.portrait
+                ? MediaQuery.of(context).size.height * 0.30
+                : MediaQuery.of(context).size.height / 5,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: const Radius.circular(50.0),
+                bottomRight: const Radius.circular(50.0),
+              ),
+              color: kPrimaryColor,
+              image: DecorationImage(
+                alignment: Alignment.center,
+                matchTextDirection: true,
+                repeat: ImageRepeat.noRepeat,
+                image: AssetImage(
+                  'assets/lb.png',
+                ),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Leaderboard",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle2
+                              .copyWith(color: Colors.white),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(child: CircleAvatar()),
+                            Center(child: CircleAvatar(radius: 42)),
+                            Center(child: CircleAvatar()),
+                          ],
+                        )
+                      ]),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0.0,
+          right: 0.0,
+          bottom: 0.0,
+          top: MediaQuery.of(context).orientation == Orientation.portrait
+              ? MediaQuery.of(context).size.height * 0.301
+              : MediaQuery.of(context).size.height / 3.8,
+          child: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 32, left: 32),
+                      child: Card(
+                        elevation: 8,
+                        shape: StadiumBorder(),
+                        color: kAccent,
+                        child: ListTile(
+                          leading: CircleAvatar(),
+                          title: Text(
+                            "1. Raihan Ahmed Kobra Kai",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(color: kPrimaryColor),
+                          ),
+                          trailing: Text("3645 entries"),
+                          shape: StadiumBorder(),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 32, left: 32),
+                      child: Card(
+                        elevation: 8,
+                        shape: StadiumBorder(),
+                        color: kAccent,
+                        child: ListTile(
+                          leading: CircleAvatar(),
+                          title: Text(
+                            "2. Saimon",
+                            style: TextStyle(color: kPrimaryColor),
+                          ),
+                          trailing: Text("2398 entries"),
+                          shape: StadiumBorder(),
+                        ),
+                      ),
+                    )
+                  ]),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -211,7 +382,8 @@ class AdvertisementFeed extends StatelessWidget {
                                             top: 16.0, left: 16.0, right: 16.0),
                                         child: Text('${a.offerEnds}',
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold, color: buttonColor)),
+                                                fontWeight: FontWeight.bold,
+                                                color: buttonColor)),
                                       ),
                                     ],
                                   ),
