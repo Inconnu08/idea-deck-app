@@ -2,6 +2,8 @@ import 'package:better_player/better_player.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:idea_deck/button.dart';
 
 import './routes.dart';
 import './screens/splash.dart';
@@ -84,6 +86,17 @@ class _ChewieDemoState extends State<ChewieDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // floatingActionButton: FloatingActionButton(
+      //   // shape: RoundedRectangleBorder(),
+      //   elevation: 50,
+      //   hoverColor: Colors.red,
+      //   autofocus: true,
+      //   onPressed: () {
+      //   },
+      //   child: ThemeButton(text: "null", ontap: null, color: kAccent),
+      //   tooltip: 'Pick Image',
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -162,7 +175,39 @@ class _ChewieDemoState extends State<ChewieDemo> {
                     .caption
                     .copyWith(color: Colors.grey),
               ),
-            )
+            ),
+            Expanded(child: Container()),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                   r'     Answer questions',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w100,
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.only(topLeft: Radius.circular(40)),
+                        color: kPrimaryColor),
+                    child: Text(
+                      'Start',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 27),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ],
         ),
       ),
