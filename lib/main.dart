@@ -37,7 +37,6 @@ class MyApp extends StatelessWidget {
 }
 
 class ChewieDemo extends StatefulWidget {
-  // ignore: use_key_in_widget_constructors
   const ChewieDemo({this.title = 'Chewie Demo'});
 
   final String title;
@@ -53,141 +52,118 @@ class _ChewieDemoState extends State<ChewieDemo> {
 
   @override
   void initState() {
-        BetterPlayerControlsConfiguration controlsConfiguration =
+    BetterPlayerControlsConfiguration controlsConfiguration =
         BetterPlayerControlsConfiguration(
-      controlBarColor: Colors.white,
-      iconsColor: kPrimaryColor,
-      progressBarPlayedColor: buttonColor,
-      progressBarHandleColor: buttonColor,
-      enableSkips: false,
-      enableFullscreen: true,
-      enableProgressBarDrag: false,
-      loadingColor: kAccent,
-      overflowModalTextColor: Colors.white,
-      overflowMenuIconsColor: Colors.white,
-    );
+            controlBarColor: Colors.white.withOpacity(0.1),
+            iconsColor: buttonColor,
+            progressBarPlayedColor: buttonColor,
+            progressBarHandleColor: buttonColor,
+            enableSkips: false,
+            enableFullscreen: true,
+            enableProgressBarDrag: false,
+            loadingColor: kAccent,
+            overflowModalTextColor: Colors.white,
+            overflowMenuIconsColor: Colors.white,
+            enableOverflowMenu: false);
 
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
             aspectRatio: 16 / 9,
             fit: BoxFit.contain,
             autoDetectFullscreenDeviceOrientation: true,
-            controlsConfiguration: controlsConfiguration
-            );
+            controlsConfiguration: controlsConfiguration);
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
-      "https://res.cloudinary.com/dxisrwiao/video/upload/v1613809156/e0ulp3n1glxioxho7ubt.m3u8",
+      'https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4',
     );
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
     super.initState();
   }
-  // VideoPlayerController _videoPlayerController1;
-  // ChewieController _chewieController;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   initializePlayer();
-  // }
-
-  // @override
-  // void dispose() {
-  //   _videoPlayerController1.dispose();
-  //   _chewieController?.dispose();
-  //   super.dispose();
-  // }
-
-  // Future<void> initializePlayer() async {
-  //   _videoPlayerController1 = VideoPlayerController.network(
-  //       'https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4');
-
-  //   await _videoPlayerController1.initialize();
-
-  //   _chewieController = ChewieController(
-  //     videoPlayerController: _videoPlayerController1,
-  //     aspectRatio: 16 / 9,
-  //     autoPlay: false,
-  //     looping: false,
-  //     allowedScreenSleep: false,
-  //     allowPlaybackSpeedChanging: false,
-  //     errorBuilder: (context, errorMessage) {
-  //       return Center(
-  //         child: Text(
-  //           "Something went wrong! Please try later.",
-  //           style: TextStyle(color: Colors.white),
-  //         ),
-  //       );
-  //     },
-  //     // Try playing around with some of these other options:
-
-  //     // showControls: false,
-  //     materialProgressColors: ChewieProgressColors(
-  //       playedColor: kPrimaryColor,
-  //       handleColor: kPrimaryColor,
-  //       backgroundColor: lightText,
-  //       bufferedColor: Colors.grey,
-  //     ),
-  //     // autoInitialize: true,
-  //   );
-  //   setState(() {});
-  // }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: widget.title,
-      home: Scaffold(
-        body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // _chewieController != null
-              //     ?
-              // ? Container(
-              //   height: 300,
-              //   child: Chewie(
-              //       controller: _chewieController,
-              //     ),
-              // )
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: BetterPlayer(controller: _betterPlayerController),
-              ),
-              // : Column(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: const [
-              //       CircularProgressIndicator(),
-              //       SizedBox(height: 20),
-              //       Text('Loading'),
-              //     ],
-              //   ),
-
-              Row(
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: BetterPlayer(controller: _betterPlayerController),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // TextButton(
-                  //   onPressed: () {
-                  //     setState(() {
-                  //       _chewieController.dispose();
-                  //       _videoPlayerController1.pause();
-                  //       _videoPlayerController1.seekTo(const Duration());
-                  //       _chewieController = ChewieController(
-                  //         videoPlayerController: _videoPlayerController1,
-                  //         autoPlay: true,
-                  //         looping: true,
-                  //       );
-                  //     });
-                  // },
-                  //   child: const Padding(
-                  //     padding: EdgeInsets.symmetric(vertical: 16.0),
-                  //     child: Text("Landscape Video"),
-                  //   ),
-                  // ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.80,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "All in or nothing, win a pair of boots!",
+                          maxLines: 4,
+                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Chip(
+                          // shape: RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(15.0),
+                          // ),
+                          backgroundColor: kAccent,
+                          // avatar: CircleAvatar(
+                          //   backgroundColor: kPrimaryColor,
+                          // ),
+                          label: Text('Cheez',
+                              style: TextStyle(
+                                  fontSize: 12.0, color: kPrimaryColor)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          "4520",
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "Entries",
+                          style: Theme.of(context).textTheme.caption.copyWith(
+                              color: Colors.grey, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Divider(thickness: 1),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'D/SurfaceUtils(14820): disconnecting from surface 0x779a59c010, reason disconnectFromSurfaceD/CCodecBufferChannel(14820): [c2.qti.avc.decoder#142] MediaCodec discarded an unknown bufferI/chatty  (14820): uid=10297(com.ideadeck.idea_deck) MediaCodec_loop identical 6 linesD/CCodecBufferChannel(14820): [c2.qti.avc.decoder#142] MediaCodec discarded an unknown bufferD/SurfaceUtils(14820): disconnecting from surface 0x779a6199c0, reason disconnectFromSurfaceI/hw-BpHwBinder(14820): onLastStrongRef automatically unlinking death recipients',
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    .copyWith(color: Colors.grey),
+              ),
+            )
+          ],
         ),
       ),
     );
