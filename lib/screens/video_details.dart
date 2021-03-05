@@ -1,6 +1,7 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:idea_deck/screens/questions.dart';
 
 import '../constants.dart';
 import '../models/ads.dart';
@@ -169,7 +170,8 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                                 fontSize: 27),
                           ),
                         ),
-                        onTap: () => 1 - 1,
+                        onTap: () => Navigator.pushNamed(
+                            context, QuestionsScreen.routeName),
                       ),
                     ),
                   ),

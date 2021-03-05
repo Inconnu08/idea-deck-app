@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import './screens/home.dart';
 import './screens/profile.dart';
+import './screens/questions.dart';
 import './screens/reset_password.dart';
 import './screens/signin.dart';
 import './screens/signup.dart';
@@ -16,4 +17,5 @@ final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => HomeScreen(),
   ProfileScreen.routeName: (context) => ProfileScreen(),
   VideoDetailScreen.routeName: (context) => VideoDetailScreen(),
+  QuestionsScreen.routeName: (context) => QuestionsScreen(),
 };
