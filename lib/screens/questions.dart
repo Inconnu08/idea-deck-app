@@ -13,8 +13,6 @@ class QuestionsScreen extends StatefulWidget {
 }
 
 class _QuestionsScreenState extends State<QuestionsScreen> {
-  BetterPlayerController _betterPlayerController;
-
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(
@@ -27,21 +25,40 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     return Scaffold(
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Container(
+              alignment: Alignment.topLeft,
+              height: 50,
+              width: MediaQuery.of(context).size.width / 3,
+              decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.only(bottomRight: Radius.circular(40)),
+                  color: kPrimaryColor),
+              child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "1 of 5",
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * .9093,
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.80,
+                    // width: MediaQuery.of(context).size.width * 0.80,
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        SizedBox(height: 20),
                         Text(
                           "How many monkeys were dancing on the largest tree that has a refractive index of 35 degress perpendicular to your eyes followed by a shadow depth equaling to the light shone on the white monkey?",
                           style: Theme.of(context).textTheme.subtitle1.copyWith(
@@ -52,9 +69,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                           padding: EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 16.0),
                           child: Divider(thickness: 0.5, color: kPrimaryColor),
                         ),
-
                         AnswerOption(answer: 'There were 430 monkeys dancing.'),
-                        AnswerOption(
+                        const AnswerOption(
                             answer:
                                 'There were no monkeys dancing that\'s for sure.'),
                         AnswerOption(answer: "There were 2 monkeys dancing."),
@@ -63,37 +79,35 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                       ],
                     ),
                   ),
+                  Expanded(child: Container()),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DragTarget<String>(onAccept: (value) {
+                          setState(() {
+                            // _targetImageUrl = value;
+                            print("complete $value");
+                          });
+                        }, builder: (_, candidateData, rejectedData) {
+                          return Container(
+                            alignment: Alignment.center,
+                            height: 80,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(40),
+                                    topRight: Radius.circular(40)),
+                                color: kPrimaryColor),
+                            child: Text(
+                              'Drag your answer here',
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                          );
+                        }),
+                      )
+                    ],
+                  ),
                 ],
               ),
-            ),
-            Expanded(child: Container()),
-            Row(
-              children: [
-                Expanded(
-                  child: DragTarget<String>(onAccept: (value) {
-                    setState(() {
-                      // _targetImageUrl = value;
-                      print("complete $value");
-                    });
-                  }, builder: (_, candidateData, rejectedData) {
-                    return Container(
-                      alignment: Alignment.center,
-                      height: 80,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(40),
-                              topRight: Radius.circular(40)),
-                          color: kPrimaryColor),
-                      child: Container(
-                        child: Text(
-                          'Drag your answer here',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                      ),
-                    );
-                  }),
-                )
-              ],
             ),
           ],
         ),
@@ -113,17 +127,18 @@ class AnswerOption extends StatelessWidget {
       child: Chip(
         backgroundColor: kAccent,
         label: Text(answer,
-            style: TextStyle(fontSize: 12.0, color: kPrimaryColor)),
+            style: const TextStyle(fontSize: 12.0, color: kPrimaryColor)),
       ),
       // The widget to show under the pointer when a drag is under way
       feedback: Opacity(
-        opacity: 0.4,
+        opacity: 0.8,
         child: Material(
+          color: Colors.transparent,
           child: Container(
             child: Chip(
               backgroundColor: kAccent,
               label: Text(answer,
-                  style: TextStyle(fontSize: 12.0, color: kPrimaryColor)),
+                  style: const TextStyle(fontSize: 12.0, color: kPrimaryColor)),
             ),
           ),
         ),
