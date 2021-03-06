@@ -22,13 +22,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _loading = false;
   var formValues = {};
-  final _passwordFocusNode = FocusNode();
-
-  @override
-  void dispose() {
-    _passwordFocusNode.dispose();
-    super.dispose();
-  }
 
   void _saveForm() async {
     setState(() {
@@ -192,11 +185,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   Text(
                     "Although the survey is completely optional, completing will earn you another entry to the draw!",
                     style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              .copyWith(color: Colors.grey),
+                        .textTheme
+                        .caption
+                        .copyWith(color: Colors.grey),
                   ),
-
                   Container(
                     padding:
                         EdgeInsets.only(left: SizeConfig.screenWidth * 0.1556),
@@ -207,28 +199,15 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         Form(
                           key: _formKey,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              buildPhoneFormField(),
+                              Text("Who was that tall looking monkey?"),
+                              buildInputFormField(1),
                               SizedBox(
-                                  height: getProportionateScreenHeight(20)),
-                              buildPasswordFormField(),
-                              SizedBox(
-                                  height: getProportionateScreenHeight(20)),
-                              Row(
-                                children: [
-                                  Spacer(),
-                                  InkWell(
-                                    onTap: () => Navigator.pushNamed(
-                                        context, ResetPasswordScreen.routeName),
-                                    customBorder: StadiumBorder(),
-                                    child: Text(
-                                      "Forgot Password?",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  )
-                                ],
-                              ),
+                                  height: getProportionateScreenHeight(30)),
+                              Text(
+                                  "Do have any option to make you own pizza and come to our shop to sell it like a pro? Let us know details in a few words."),
+                              buildInputFormField(2),
                               SizedBox(
                                   height: getProportionateScreenHeight(20)),
                             ],
@@ -250,7 +229,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             width: 200,
                             child: ThemeButton(
                               color: buttonColor,
-                              text: "Connect",
+                              text: "Submit",
                               ontap: () => _saveForm(),
                             ),
                           ),
@@ -265,35 +244,13 @@ class _SurveyScreenState extends State<SurveyScreen> {
     );
   }
 
-  TextFormField buildPasswordFormField() {
+  TextFormField buildInputFormField(int id) {
     return TextFormField(
-      obscureText: true,
-      focusNode: _passwordFocusNode,
-      onSaved: (newValue) => formValues['password'] = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          // removeError(error: kPassNullError);
-        } else if (value.length >= 8) {
-          // removeError(error: kShortPassError);
-        }
-        return null;
-      },
-      validator: (value) => validateEmpty(value),
-      decoration: InputDecoration(
-        labelText: "Do have any option to make you own pizza\n and come to our shop to sell it like a pro?\n Let us know details in a few words.",
-        labelStyle: const TextStyle(color: kPrimaryColor),
-        // hintText: "Enter your password",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-      ),
-    );
-  }
-
-  TextFormField buildPhoneFormField() {
-    return TextFormField(
+      minLines: 3,
+      maxLines: 4,
       keyboardType: TextInputType.text,
-      validator: (value) => validateMobile(value),
-      onSaved: (newValue) => formValues['phone'] = newValue,
+      // validator: (value) => validateMobile(value),
+      onSaved: (newValue) => formValues[id] = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
           // removeError(error: kEmailNullError);
@@ -303,15 +260,14 @@ class _SurveyScreenState extends State<SurveyScreen> {
         return null;
       },
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(0),
         labelText: "",
         labelStyle: const TextStyle(color: kPrimaryColor),
         // hintText: "Enter your phone number",
         floatingLabelBehavior: FloatingLabelBehavior.always,
         // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
       ),
-      onFieldSubmitted: (_) {
-        FocusScope.of(context).requestFocus(_passwordFocusNode);
-      },
+      onFieldSubmitted: (_) {},
     );
   }
 }
