@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:idea_deck/screens/survey.dart';
 import 'package:idea_deck/screens/video_details.dart';
 
 import './routes.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Idea Deck',
       debugShowCheckedModeBanner: false,
       theme: theme(),
-      home: VideoDetailScreen(),
+      home: SurveyScreen(),
       routes: routes,
     );
   }

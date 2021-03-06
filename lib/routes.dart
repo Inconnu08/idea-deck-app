@@ -7,6 +7,7 @@ import './screens/reset_password.dart';
 import './screens/signin.dart';
 import './screens/signup.dart';
 import './screens/splash.dart';
+import './screens/survey.dart';
 import './screens/video_details.dart';
 
 final Map<String, WidgetBuilder> routes = {
@@ -18,4 +19,5 @@ final Map<String, WidgetBuilder> routes = {
   ProfileScreen.routeName: (context) => ProfileScreen(),
   VideoDetailScreen.routeName: (context) => VideoDetailScreen(),
   QuestionsScreen.routeName: (context) => QuestionsScreen(),
+  SurveyScreen.routeName: (context) => SurveyScreen(),
 };
