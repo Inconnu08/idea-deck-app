@@ -11,20 +11,34 @@ class ProductsSuggestionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     var p = [
       Product(
           id: 1,
           name: "Cheez Pizza",
           price: 120,
           image:
-              "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900"),
+              "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900",
+          url: "https://www.facebook.com/cheezbd/"),
       Product(
-          id: 1,
+          id: 5,
           name: "Cheez Juice",
           price: 20,
           image:
-              "https://cdn.chaldal.net/_mpimage/cyprina-grape-juice-1-ltr?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FPicture%2FRaw%3FpictureId%3D16872&q=low&v=1"),
+              "https://i.pinimg.com/originals/7d/ab/9d/7dab9d75b959d2fd74d7bae9bc7f8b18.jpg",
+          url: "https://www.facebook.com/cheezbd/"),
+      Product(
+          id: 3,
+          name: "Cheez T Shirt",
+          price: 220,
+          image:
+              "https://cdn.shopify.com/s/files/1/0209/1522/products/party_pizza_tee_preview_1024x1024.jpg?v=1590534250",
+          url: "https://www.facebook.com/cheezbd/"),
+      Product(
+          id: 4,
+          name: "Cheez Mask",
+          price: 100,
+          image:
+              "https://trickortreatstudios.com/media/catalog/product/cache/1da4909b8e3ea5eea17a9fb4c6e4a516/p/i/pizza_fiend_1.png"),
     ];
 
     return Scaffold(

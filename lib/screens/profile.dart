@@ -111,6 +111,15 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Text(
+                        "Draws entered",
+                        maxLines: 4,
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                            color: kPrimaryColor, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.only(right: 32, left: 32),
                       child: Card(
                         elevation: 8,
@@ -119,7 +128,7 @@ class ProfileScreen extends StatelessWidget {
                         child: ListTile(
                           leading: CircleAvatar(),
                           title: Text(
-                            "1. Raihan Ahmed Kobra Kai",
+                            "All in or nothing",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: TextStyle(color: kPrimaryColor),
@@ -138,7 +147,7 @@ class ProfileScreen extends StatelessWidget {
                         child: ListTile(
                           leading: CircleAvatar(),
                           title: Text(
-                            "2. Saimon",
+                            "Pizza Offer",
                             style: TextStyle(color: kPrimaryColor),
                           ),
                           trailing: Text("2398 entries"),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'home.dart';
 import 'intro.dart';
+import 'signin.dart';
 
 class SplashScreen extends StatefulWidget {
   static String routeName = "/splash";
@@ -25,7 +26,7 @@ class SplashScreenState extends State<SplashScreen>
 
   void navigationPage() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => HomeScreen(),
+      builder: (context) => IntroScreen(),
     ));
   }
 

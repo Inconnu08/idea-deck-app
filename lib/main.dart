@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:idea_deck/screens/suggest.dart';
 import 'package:idea_deck/screens/survey.dart';
@@ -7,19 +6,31 @@ import 'package:idea_deck/screens/video_details.dart';
 import './routes.dart';
 import './size_config.dart';
 import './theme.dart';
+import 'database/shared_perf.dart';
+import 'network/connectivity.dart';
+import 'screens/home.dart';
+import 'screens/splash.dart';
 
-main() {
+main() async {
   // debugPaintSizeEnabled=true;
-  runApp(DevicePreview(
+  WidgetsFlutterBinding.ensureInitialized();
+  ConnectionStatusSingleton connectionStatus =
+      ConnectionStatusSingleton.getInstance();
+  connectionStatus.initialize();
+  await sharedPrefs.init();
+  runApp(
+    // DevicePreview(
     // enabled: !kReleaseMode,
-    enabled: false,
-    builder: (context) => LayoutBuilder(builder: (context, constraints) {
+    // enabled: false,
+    // builder: (context) =>
+    LayoutBuilder(builder: (context, constraints) {
       return OrientationBuilder(builder: (context, orientation) {
         SizeConfig().init(constraints, orientation);
         return MyApp();
       });
     }),
-  ));
+  );
+  // );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,7 +40,7 @@ class MyApp extends StatelessWidget {
       title: 'Idea Deck',
       debugShowCheckedModeBanner: false,
       theme: theme(),
-      home: ProductsSuggestionsScreen(),
+      home: SplashScreen(),
       routes: routes,
     );
   }

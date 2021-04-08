@@ -45,7 +45,7 @@ dependencies:
   image_cropper: ^1.2.2
   path_provider: ^1.6.7
   flutter_webview_plugin: ^0.3.11
-  device_preview: ^0.5.5
+  # device_preview: ^0.5.5
   connectivity: ^2.0.2
   pull_to_refresh: ^1.6.3
   animations: ^1.1.2
@@ -55,6 +55,7 @@ dependencies:
   bottom_navy_bar: ^5.6.0
   # chewie: ^0.12.2
   better_player: ^0.0.61
+  url_launcher: ^5.0.0
   # video_player: any
 
 

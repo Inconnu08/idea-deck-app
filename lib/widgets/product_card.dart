@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../constants.dart';
 import '../models/product.dart';
@@ -15,6 +16,10 @@ class ProductCard extends StatelessWidget {
   final double width, aspectRetio;
   final Product product;
 
+  void _launchURL() async => await canLaunch(product.url)
+      ? await launch(product.url)
+      : throw 'Could not launch ${product.url}';
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,13 +27,14 @@ class ProductCard extends StatelessWidget {
       child: SizedBox(
         width: getProportionateScreenWidth(width),
         child: GestureDetector(
-          onTap: () {},
+          onTap: () => _launchURL(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AspectRatio(
-                aspectRatio: getProportionateScreenWidth(1.5),
+                aspectRatio: getProportionateScreenWidth(0.9),
                 child: Container(
+                  height: 200,
                   padding: EdgeInsets.all(getProportionateScreenWidth(20)),
                   decoration: BoxDecoration(
                     color: kSecondaryColor.withOpacity(0.1),

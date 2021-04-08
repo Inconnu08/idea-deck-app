@@ -1,13 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:idea_deck/database/shared_perf.dart';
+import 'package:idea_deck/network/api.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
 import '../button.dart';
 import '../constants.dart';
 import '../screens/reset_password.dart';
 import '../screens/signup.dart';
+import '../screens/home.dart';
 import '../size_config.dart';
 import '../utils/validators.dart';
 
@@ -43,126 +49,99 @@ class _SignInScreenState extends State<SignInScreen> {
       return;
     }
 
-    // _formKey.currentState.save();
+    _formKey.currentState.save();
 
-    // try {
-    //   var r = await login(email, password);
+    try {
+      var r = await login(formValues['phone'], formValues['password']);
 
-    //   print('body: ${r.body}');
-    //   var b = json.decode(r.body);
-    //   var s = r.statusCode;
-    //   print('status code s: $s');
-    //   print('status code direct: ${r.statusCode}');
+      print('body: ${r.body}');
+      var b = json.decode(r.body);
+      var s = r.statusCode;
+      print('status code s: $s');
+      print('status code direct: ${r.statusCode}');
 
-    //   if (s != 200) {
-    //     if (s == 402) {
-    //       sharedPrefs.token = b['token'];
-    //       var p = b['profile'];
-    //       print(p);
-    //       print(b);
-    //       print(p['full_name']);
-    //       print(b['email']);
-    //       print(b['id']);
-    //       sharedPrefs.uid = b['id'];
-    //       sharedPrefs.isGuest = false;
-    //       sharedPrefs.name = p['full_name'];
-    //       sharedPrefs.phone = p['phone'];
-    //       sharedPrefs.email = b['email'];
-    //       sharedPrefs.isSeller = b['is_seller'];
-    //       if (b['is_seller']) {
-    //         sharedPrefs.shopName = p['shop_name'];
-    //         sharedPrefs.shopPicture = p['shop_picture'];
-    //         sharedPrefs.address = p['address'];
-    //         sharedPrefs.city = p['city'];
-    //       } else {
-    //         sharedPrefs.address = p['address'];
-    //         sharedPrefs.city = p['city'];
-    //       }
+      if (s != 200) {
+        if (s == 402) {
+          sharedPrefs.token = b['token'];
+          print(b['email']);
+          print(b['id']);
+          sharedPrefs.uid = b['id'];
+          sharedPrefs.name = b['name'];
+          sharedPrefs.phone = b['phone'];
+          sharedPrefs.email = b['email'];
+          sharedPrefs.firstLaunch = false;
+          Fluttertoast.showToast(
+              msg: b['message'],
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          // Navigator.of(context).pop();
+          // if (p['referral'] != null) {
+          //   print("===============================>${p['referral']})");
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => PaymentOptionsScreen(true)),
+          //   );
+          //   return;
+          // }
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) => PaymentOptionsScreen(false)),
+          // );
+        }
+        if (s == 400) {
+          Fluttertoast.showToast(
+              msg: "Incorrect email or password!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          setState(() {
+            _loading = false;
+          });
+          return;
+        }
+      }
 
-    //       sharedPrefs.a = b['a'];
-    //       sharedPrefs.subscriptionEnd = p['subscription_end'];
-    //       sharedPrefs.subscriptionStart = p['subscription_start'];
-    //       sharedPrefs.tradeLicense = p['trade_license'];
-    //       sharedPrefs.firstLaunch = false;
-    //       Fluttertoast.showToast(
-    //           msg: b['message'],
-    //           toastLength: Toast.LENGTH_LONG,
-    //           gravity: ToastGravity.BOTTOM,
-    //           timeInSecForIosWeb: 1,
-    //           backgroundColor: Colors.red,
-    //           textColor: Colors.white,
-    //           fontSize: 16.0);
-    //       Navigator.of(context).pop();
-    //       if (p['referral'] != null) {
-    //         print("===============================>${p['referral']})");
-    //         Navigator.push(
-    //           context,
-    //           MaterialPageRoute(
-    //               builder: (context) => PaymentOptionsScreen(true)),
-    //         );
-    //         return;
-    //       }
-    //       Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //             builder: (context) => PaymentOptionsScreen(false)),
-    //       );
-    //     }
-    //     if (s == 400) addError(error: "Incorrect email or password");
-    //     setState(() {
-    //       _loading = false;
-    //     });
-    //     return;
-    //   }
-    //   var p = b['profile'];
-    //   print(p);
-    //   print(b);
-    //   print(p['full_name']);
-    //   print(b['email']);
-    //   print(b['id']);
-    //   sharedPrefs.uid = b['id'];
-    //   sharedPrefs.name = p['full_name'];
-    //   sharedPrefs.phone = p['phone'];
-    //   sharedPrefs.email = b['email'];
-    //   sharedPrefs.token = b['token'];
-    //   sharedPrefs.isSeller = b['is_seller'];
-    //   sharedPrefs.isGuest = false;
-    //   if (b['is_seller']) {
-    //     sharedPrefs.shopName = p['shop_name'];
-    //     sharedPrefs.shopPicture = p['shop_picture'];
-    //     sharedPrefs.address = p['address'];
-    //     sharedPrefs.city = p['city'];
-    //   } else {
-    //     sharedPrefs.address = p['address'];
-    //     sharedPrefs.city = p['city'];
-    //   }
+      print(b);
+      print(b['name']);
+      print(b['email']);
+      print(b['id']);
+      sharedPrefs.uid = b['id'];
+      sharedPrefs.name = b['name'];
+      sharedPrefs.phone = b['phone'];
+      sharedPrefs.email = b['email'];
+      sharedPrefs.token = b['token'];
+      sharedPrefs.firstLaunch = false;
+      // storeAuth(context, r.body);
 
-    //   sharedPrefs.a = b['a'];
-    //   sharedPrefs.subscriptionEnd = p['subscription_end'];
-    //   sharedPrefs.subscriptionStart = p['subscription_start'];
-    //   sharedPrefs.tradeLicense = p['trade_license'];
-    //   sharedPrefs.firstLaunch = false;
-    //   // storeAuth(context, r.body);
-
-    //   Navigator.popAndPushNamed(context, LoginSuccessScreen.routeName);
-    // } on SocketException catch (e) {
-    //   print("Socket Exception: $e");
-    //   setState(() {
-    //     _loading = false;
-    //   });
-    Fluttertoast.showToast(
-        msg: "No internet connection!",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-    // }
+      Navigator.popAndPushNamed(context, HomeScreen.routeName);
+    } on SocketException catch (e) {
+      print("Socket Exception: $e");
+      setState(() {
+        _loading = false;
+      });
+      Fluttertoast.showToast(
+          msg: "No internet connection!",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // _loading = false;
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     // print("Screen");
     // print(SizeConfig.screenWidth * 0.1556);
@@ -273,7 +252,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             child: ThemeButton(
                               color: buttonColor,
                               text: "Connect",
-                              ontap: () => _saveForm(),
+                              ontap: () => _saveForm()
                             ),
                           ),
                         ),

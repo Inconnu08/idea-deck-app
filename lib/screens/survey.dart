@@ -6,6 +6,7 @@ import 'package:progress_indicators/progress_indicators.dart';
 import '../button.dart';
 import '../constants.dart';
 import '../size_config.dart';
+import '../screens/suggest.dart';
 
 class SurveyScreen extends StatefulWidget {
   static String routeName = "/survey";
@@ -18,6 +19,13 @@ class _SurveyScreenState extends State<SurveyScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _loading = false;
   var formValues = {};
+
+  // @override
+  // void initState() {
+  //   SystemChrome.setSystemUIOverlayStyle(
+  //       SystemUiOverlayStyle(statusBarColor: kPrimaryColor));
+  //   super.initState();
+  // }
 
   void _saveForm() async {
     setState(() {
@@ -226,7 +234,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             child: ThemeButton(
                               color: buttonColor,
                               text: "Submit",
-                              ontap: () => _saveForm(),
+                              ontap: () => Navigator.pushNamed(
+                            context, ProductsSuggestionsScreen.routeName),
                             ),
                           ),
                         ),

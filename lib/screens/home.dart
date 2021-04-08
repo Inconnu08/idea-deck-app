@@ -2,6 +2,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:idea_deck/screens/profile.dart';
+import 'package:idea_deck/screens/video_details.dart';
 
 import '../constants.dart';
 import '../models/ads.dart';
@@ -40,13 +41,25 @@ class _HomeScreenState extends State<HomeScreen> {
     print(Theme.of(context).textTheme.headline1.toString());
 
     return Scaffold(
-        appBar: AppBar(actions: <Widget>[
-          InkWell(
-            child: CircleAvatar(radius: 16),
-            onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
-          ),
-          SizedBox(width: 16)
-        ]),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+            title: Text(
+              "Offers",
+              style: Theme.of(context).textTheme.subtitle2,
+            ),
+            actions: <Widget>[
+              InkWell(
+                child: CircleAvatar(
+                  radius: 16,
+                  backgroundImage: NetworkImage(
+                      'https://www.pngfind.com/pngs/m/488-4887957_facebook-teerasej-profile-ball-circle-circular-profile-picture.png'),
+                  backgroundColor: Colors.transparent,
+                ),
+                onTap: () =>
+                    Navigator.pushNamed(context, ProfileScreen.routeName),
+              ),
+              SizedBox(width: 16)
+            ]),
         body: SizedBox.expand(
           child: PageView(
             controller: _pageController,
@@ -291,10 +304,6 @@ class AdvertisementFeed extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Offers",
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -312,7 +321,7 @@ class AdvertisementFeed extends StatelessWidget {
                     ),
                   ]),
               Container(
-                height: MediaQuery.of(context).size.height * 0.63,
+                height: MediaQuery.of(context).size.height * 0.685,
                 width: double.infinity,
                 child: ads.isEmpty
                     ? Center(
@@ -343,8 +352,8 @@ class AdvertisementFeed extends StatelessWidget {
                                       height: 200,
                                       child: FlatButton(
                                         onPressed: () {
-                                          // Navigator.pushNamed(
-                                          //     context, ItemScreen.routeName);
+                                          Navigator.pushNamed(context,
+                                              VideoDetailScreen.routeName);
                                           print("beep");
                                         },
                                         child: null,

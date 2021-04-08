@@ -4,9 +4,10 @@ import 'package:flutter/services.dart';
 
 import '../constants.dart';
 import '../models/ads.dart';
+import '../screens/survey.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  static String routeName = "/details";
+  static String routeName = "/questions";
 
   @override
   _QuestionsScreenState createState() => _QuestionsScreenState();
@@ -23,6 +24,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +47,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   )),
             ),
             Container(
-              height: MediaQuery.of(context).size.height * .9093,
+              height: MediaQuery.of(context).size.height * .8914,
               width: double.infinity,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -59,11 +61,18 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(height: 20),
-                        Text(
-                          "How many monkeys were dancing on the largest tree that has a refractive index of 35 degress perpendicular to your eyes followed by a shadow depth equaling to the light shone on the white monkey?",
-                          style: Theme.of(context).textTheme.subtitle1.copyWith(
-                              color: kPrimaryColor,
-                              fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: ()=> Navigator.pushNamed(
+                            context, SurveyScreen.routeName),
+                          child: Text(
+                            "How many monkeys were dancing on the largest tree that has a refractive index of 35 degress perpendicular to your eyes followed by a shadow depth equaling to the light shone on the white monkey?",
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.bold),
+                          ),
                         ),
                         const Padding(
                           padding: EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 16.0),
