@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:idea_deck/screens/success.dart';
 import 'package:idea_deck/screens/suggest.dart';
 
 import './screens/home.dart';
@@ -22,4 +23,5 @@ final Map<String, WidgetBuilder> routes = {
   QuestionsScreen.routeName: (context) => QuestionsScreen(),
   SurveyScreen.routeName: (context) => SurveyScreen(),
   ProductsSuggestionsScreen.routeName: (context) => ProductsSuggestionsScreen(),
+  SuccessScreen.routeName: (context) => SuccessScreen(),
 };

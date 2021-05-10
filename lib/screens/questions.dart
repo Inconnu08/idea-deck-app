@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../network/api.dart';
 
 import '../constants.dart';
 import '../models/ads.dart';
-import '../screens/survey.dart';
 import '../models/questions.dart';
+import '../network/api.dart';
+import '../screens/success.dart';
+import '../screens/survey.dart';
 
 class QuestionsScreen extends StatefulWidget {
   static String routeName = "/questions";
@@ -64,7 +65,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                         totalQuestions = q.questions.length;
                         context
                             .read<QuestionnaireState>()
-                            .setTotalQuestions(q.questions.length);
+                            .setTotalQuestions(widget.id, q.questions.length);
 
                         print(q.questions);
 
@@ -212,13 +213,8 @@ class _QuestionCardState extends State<QuestionCard> {
                                         child: Text("Yes"),
                                         textColor: Colors.green,
                                         onPressed: () {
-                                          Navigator.of(context).pop();
-                                          showDialog(
-                                              context: context,
-                                              barrierDismissible: false,
-                                              builder: (BuildContext context) =>
-                                                  QuestionPostStatus(
-                                                      id: widget.question.id));
+                                          Navigator.of(context).popAndPushNamed(
+                                              SuccessScreen.routeName);
                                         },
                                       ),
                                       FlatButton(

@@ -1,11 +1,11 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:idea_deck/network/http.dart';
-import 'package:idea_deck/screens/questions.dart';
 
 import '../constants.dart';
 import '../models/ads.dart';
+import '../network/http.dart';
+import '../screens/questions.dart';
 
 class VideoDetailScreen extends StatefulWidget {
   static String routeName = "/details";

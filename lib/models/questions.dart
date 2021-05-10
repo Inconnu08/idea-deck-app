@@ -110,6 +110,7 @@ class Questionnaire {
 
 class QuestionnaireState with ChangeNotifier {
   Questionnaire state;
+  int questionId;
   int currentQuestionNo = 0;
   int totalQuestions = 1;
   List<Map> questions = [];
@@ -122,8 +123,9 @@ class QuestionnaireState with ChangeNotifier {
     survey = [];
   }
 
-  setTotalQuestions(int total) {
+  setTotalQuestions(int qid, int total) {
     totalQuestions = total;
+    questionId = qid;
   }
 
   nextQuestion() {
