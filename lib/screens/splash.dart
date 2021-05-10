@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:idea_deck/database/shared_perf.dart';
 
 import 'home.dart';
 import 'intro.dart';
@@ -26,7 +27,10 @@ class SplashScreenState extends State<SplashScreen>
 
   void navigationPage() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => IntroScreen(),
+      builder: (context) =>
+          (!sharedPrefs.firstLaunch && sharedPrefs.token.isNotEmpty)
+              ? HomeScreen()
+              : IntroScreen(),
     ));
   }
 

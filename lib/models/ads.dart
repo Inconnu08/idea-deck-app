@@ -1,35 +1,123 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart';
+
 class Advertisement {
-  final String id;
+  final int id;
   final String title;
   final String description;
-  final String offerEnds;
+  final String offer_ends;
   final String created;
   final String thumbnail;
+  final String video;
   final String brand;
+  final int participates;
+  final String winner;
+  final int status;
+  final bool available;
 
-  Advertisement(this.id, this.title, this.description, this.offerEnds,
-      this.created, this.thumbnail, this.brand);
+  Advertisement(
+      {@required this.id,
+      @required this.title,
+      @required this.description,
+      @required this.offer_ends,
+      @required this.created,
+      @required this.thumbnail,
+      @required this.video,
+      @required this.brand,
+      @required this.participates,
+      @required this.winner,
+      @required this.status,
+      @required this.available});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'offer_ends': offer_ends,
+      'created': created,
+      'thumbnail': thumbnail,
+      'brand': brand,
+      'participates': participates,
+      'winner': winner,
+    };
+  }
+
+  factory Advertisement.fromMap(Map<String, dynamic> map) {
+    return Advertisement(
+      id: map['id'] as int,
+      title: map['title'],
+      description: map['description'],
+      offer_ends: map['offer_ends'],
+      created: map['created'],
+      thumbnail: map['thumbnail'],
+      video: map['video'],
+      brand: map['brand'],
+      participates: map['participates'] as int,
+      winner: map['winner'],
+      status: map['status'] as int,
+      available: map['available'] as bool,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Advertisement.fromJson(String source) =>
+      Advertisement.fromMap(json.decode(source));
 }
 
-var ads = [
-  Advertisement(
-      "1",
-      "Win a small pizza!",
-      "extStyle(debugLabel: (englishLike display4 2014).merge(((blackMountainView headline1).apply).merge(unknown)), inherit: false, color: Color(0xffffffff), family: NotoSans, size:",
-      "March 3 2021",
-      "March 1 2021",
-      "https://i.ytimg.com/vi/9pDleIHaz5s/maxresdefault.jpg",
-      "Cheez"),
-  Advertisement(
-      "2",
-      "All in or nothing, win a pair of boots!",
-      "Sadidas extStyle(debugLabel: (englishLike display4 2014).merge(((blackMountainView headline1).apply).merge(unknown)), inherit: false, color: Color(0xFF2222), family: NotoSans, size:",
-      "March 8 2021",
-      "February 23 2021",
-      "https://www.designyourway.net/blog/wp-content/uploads/2017/12/alliornothing.jpg",
-      "Adidas"),
-];
+class PaginatedProducts {
+  int statusCode;
+  int count;
+  String next;
+  String previous;
+  List<Advertisement> results;
+  int nItems;
 
-getAds() {
-  return ads;
+  String errorMessage;
+
+  PaginatedProducts(
+      {this.statusCode, this.count, this.next, this.previous, this.results});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'count': count,
+      'next': next,
+      'previous': previous,
+      'results': results?.map((x) => x?.toMap())?.toList(),
+    };
+  }
+
+  factory PaginatedProducts.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+
+    return PaginatedProducts(
+      count: map['count'] as int,
+      next: map['next'],
+      previous: map['previous'],
+      results: List<Advertisement>.from(
+          map['results']?.map((x) => Advertisement.fromMap(x))),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory PaginatedProducts.fromJson(String source) =>
+      PaginatedProducts.fromMap(json.decode(source));
+
+  PaginatedProducts.fromResponse(Response response) {
+    this.statusCode = response.statusCode;
+    Map<String, dynamic> map = json.decode(response.body);
+    count = map['count'] as int;
+    next = map['next'];
+    previous = map['previous'];
+    results = List<Advertisement>.from(
+        map['results']?.map((x) => Advertisement.fromMap(x)));
+    nItems = results.length;
+  }
+
+  PaginatedProducts.withError(
+      {this.errorMessage, this.count, this.next, this.previous, this.results});
 }

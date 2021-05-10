@@ -1,6 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_paginator/flutter_paginator.dart';
+import 'package:http/http.dart';
+import 'package:idea_deck/database/shared_perf.dart';
+import 'package:idea_deck/models/leaderboard.dart';
+import 'package:idea_deck/network/api.dart';
+import 'package:idea_deck/network/http.dart';
 import 'package:idea_deck/screens/profile.dart';
 import 'package:idea_deck/screens/video_details.dart';
 
@@ -159,138 +168,321 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class LeaderBoard extends StatelessWidget {
+class LeaderBoard extends StatefulWidget {
   const LeaderBoard({
     Key key,
   }) : super(key: key);
 
   @override
+  _LeaderBoardState createState() => _LeaderBoardState();
+}
+
+class _LeaderBoardState extends State<LeaderBoard> {
+  Future<dynamic> leaderboardFuture;
+
+  @override
+  void initState() {
+    leaderboardFuture = fetchLeaderBoard();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          top: 0.0,
-          left: 0,
-          right: 0,
-          child: Container(
-            height: MediaQuery.of(context).orientation == Orientation.portrait
-                ? MediaQuery.of(context).size.height * 0.30
-                : MediaQuery.of(context).size.height / 5,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: const Radius.circular(50.0),
-                bottomRight: const Radius.circular(50.0),
-              ),
-              color: kPrimaryColor,
-              image: DecorationImage(
-                alignment: Alignment.center,
-                matchTextDirection: true,
-                repeat: ImageRepeat.noRepeat,
-                image: AssetImage(
-                  'assets/lb.png',
-                ),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(height: 10),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      child: FutureBuilder<Leaderboard>(
+          future: leaderboardFuture,
+          builder: (BuildContext context, snapshot) {
+            print(snapshot.hasData);
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return Center(child: CircularProgressIndicator());
+              default:
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                  return Center(child: Text('Opps! Something went wrong!'));
+                } else {
+                  if (snapshot.hasData) {
+                    Leaderboard l = snapshot.data;
+
+                    return Stack(
                       children: <Widget>[
-                        Text(
-                          "Leaderboard",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle2
-                              .copyWith(color: Colors.white),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(child: CircleAvatar()),
-                            Center(child: CircleAvatar(radius: 42)),
-                            Center(child: CircleAvatar()),
-                          ],
-                        )
-                      ]),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          left: 0.0,
-          right: 0.0,
-          bottom: 0.0,
-          top: MediaQuery.of(context).orientation == Orientation.portrait
-              ? MediaQuery.of(context).size.height * 0.301
-              : MediaQuery.of(context).size.height / 3.8,
-          child: SingleChildScrollView(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 32, left: 32),
-                      child: Card(
-                        elevation: 8,
-                        shape: StadiumBorder(),
-                        color: kAccent,
-                        child: ListTile(
-                          leading: CircleAvatar(),
-                          title: Text(
-                            "1. Raihan Ahmed Kobra Kai",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(color: kPrimaryColor),
+                        Positioned(
+                          top: 0.0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            height: MediaQuery.of(context).orientation ==
+                                    Orientation.portrait
+                                ? MediaQuery.of(context).size.height * 0.30
+                                : MediaQuery.of(context).size.height / 5,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: const Radius.circular(50.0),
+                                bottomRight: const Radius.circular(50.0),
+                              ),
+                              color: kPrimaryColor,
+                              image: DecorationImage(
+                                alignment: Alignment.center,
+                                matchTextDirection: true,
+                                repeat: ImageRepeat.noRepeat,
+                                image: AssetImage(
+                                  'assets/lb.png',
+                                ),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(height: 10),
+                                  Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          "Leaderboard",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2
+                                              .copyWith(color: Colors.white),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Center(
+                                              child: CircleAvatar(
+                                                  radius: 25,
+                                                  backgroundImage: NetworkImage((l
+                                                              .leaderboard
+                                                              .length <
+                                                          2)
+                                                      ? "$mediaBaseUrl${l.leaderboard[2].picture}"
+                                                      : ""),
+                                                  backgroundColor:
+                                                      Colors.white),
+                                            ),
+                                            Center(
+                                              child: CircleAvatar(
+                                                  radius: 42,
+                                                  backgroundImage: NetworkImage(
+                                                      "$mediaBaseUrl${l.leaderboard[0].picture}"),
+                                                  backgroundColor:
+                                                      Colors.white),
+                                            ),
+                                            Center(
+                                              child: CircleAvatar(
+                                                  radius: 25,
+                                                  backgroundImage: NetworkImage(
+                                                      "$mediaBaseUrl${l.leaderboard[1].picture}"),
+                                                  backgroundColor:
+                                                      Colors.white),
+                                            ),
+                                          ],
+                                        )
+                                      ]),
+                                ],
+                              ),
+                            ),
                           ),
-                          trailing: Text("3645 entries"),
-                          shape: StadiumBorder(),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 32, left: 32),
-                      child: Card(
-                        elevation: 8,
-                        shape: StadiumBorder(),
-                        color: kAccent,
-                        child: ListTile(
-                          leading: CircleAvatar(),
-                          title: Text(
-                            "2. Saimon",
-                            style: TextStyle(color: kPrimaryColor),
+                        Positioned(
+                          left: 0.0,
+                          right: 0.0,
+                          bottom: 0.0,
+                          top: MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? MediaQuery.of(context).size.height * 0.301
+                              : MediaQuery.of(context).size.height / 3.8,
+                          child: SingleChildScrollView(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height,
+                              width: MediaQuery.of(context).size.width,
+                              child: ListView.builder(
+                                itemCount: l.leaderboard.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 32, left: 32),
+                                    child: Card(
+                                      elevation: 8,
+                                      shape: StadiumBorder(),
+                                      color: kAccent,
+                                      child: ListTile(
+                                        leading: CircleAvatar(),
+                                        title: Text(
+                                          "${index + 1}. ${l.leaderboard[index].full_name}",
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style:
+                                              TextStyle(color: kPrimaryColor),
+                                        ),
+                                        trailing: Text(
+                                            "${l.leaderboard[index].entries} entries"),
+                                        shape: StadiumBorder(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              // Column(
+                              //     mainAxisAlignment: MainAxisAlignment.start,
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: <Widget>[
+                              //       Padding(
+                              //         padding: const EdgeInsets.only(
+                              //             right: 32, left: 32),
+                              //         child: Card(
+                              //           elevation: 8,
+                              //           shape: StadiumBorder(),
+                              //           color: kAccent,
+                              //           child: ListTile(
+                              //             leading: CircleAvatar(),
+                              //             title: Text(
+                              //               "1. Raihan Ahmed Kobra Kai",
+                              //               overflow: TextOverflow.ellipsis,
+                              //               maxLines: 1,
+                              //               style:
+                              //                   TextStyle(color: kPrimaryColor),
+                              //             ),
+                              //             trailing: Text("3645 entries"),
+                              //             shape: StadiumBorder(),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //       Padding(
+                              //         padding: const EdgeInsets.only(
+                              //             right: 32, left: 32),
+                              //         child: Card(
+                              //           elevation: 8,
+                              //           shape: StadiumBorder(),
+                              //           color: kAccent,
+                              //           child: ListTile(
+                              //             leading: CircleAvatar(),
+                              //             title: Text(
+                              //               "2. Saimon",
+                              //               style:
+                              //                   TextStyle(color: kPrimaryColor),
+                              //             ),
+                              //             trailing: Text("2398 entries"),
+                              //             shape: StadiumBorder(),
+                              //           ),
+                              //         ),
+                              //       )
+                              //     ]),
+                            ),
                           ),
-                          trailing: Text("2398 entries"),
-                          shape: StadiumBorder(),
                         ),
-                      ),
-                    )
-                  ]),
-            ),
-          ),
-        ),
-      ],
+                      ],
+                    );
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                }
+            }
+          }),
     );
   }
 }
 
-class AdvertisementFeed extends StatelessWidget {
+class AdvertisementFeed extends StatefulWidget {
   AdvertisementFeed({
     Key key,
   }) : super(key: key);
 
-  final ads = getAds();
+  @override
+  _AdvertisementFeedState createState() => _AdvertisementFeedState();
+}
+
+class _AdvertisementFeedState extends State<AdvertisementFeed> {
+  // final ads = getAds();
+  GlobalKey<PaginatorState> paginatorGlobalKey = GlobalKey();
+
+  Widget listItemBuilder(value, int index) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: AdvertisementCard(a: value),
+    );
+  }
+
+  Widget loadingWidgetMaker() {
+    return Container(
+      alignment: Alignment.center,
+      height: 160.0,
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget errorWidgetMaker(PaginatedProducts pp, retryListener) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Text(pp.errorMessage ?? "error"),
+          ),
+          FlatButton(
+            onPressed: retryListener,
+            child: const Text('Retry'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget emptyListWidgetMaker(PaginatedProducts pp) {
+    return const Center(
+      child: Text('No product in the list'),
+    );
+  }
+
+  int totalPagesGetter(PaginatedProducts p) {
+    return p.count;
+  }
+
+  bool pageErrorChecker(PaginatedProducts p) {
+    return p.statusCode != 200;
+  }
+
+  List<Advertisement> listItemsGetter(PaginatedProducts p) {
+    List<Advertisement> list = [];
+    p.results.forEach((value) {
+      list.add(value);
+    });
+    return list;
+  }
+
+  Future<PaginatedProducts> fetchAdvertisements(int page) async {
+    //   '${baseURL}videos?cat=${widget.category.slug}&page=$page',
+    try {
+      final response = await get('${baseURL}videos?page=$page', headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${sharedPrefs.token}',
+      });
+      print(json.decode(response.body));
+      return PaginatedProducts.fromResponse(response);
+    } catch (e) {
+      if (e is IOException) {
+        return PaginatedProducts.withError(
+            errorMessage: 'Please check your internet connection.');
+      } else {
+        print(e.toString());
+        return PaginatedProducts.withError(
+            errorMessage: 'Something went wrong.');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -323,124 +515,161 @@ class AdvertisementFeed extends StatelessWidget {
               Container(
                 height: MediaQuery.of(context).size.height * 0.685,
                 width: double.infinity,
-                child: ads.isEmpty
-                    ? Center(
-                        child: Text(
-                            '        No items in 😩\nMaybe add items to? 🙄'))
-                    : ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        itemCount: ads.length,
-                        physics: const BouncingScrollPhysics(
+                child:
+                    // ads.isEmpty
+                    //     ? Center(
+                    //         child: Text(
+                    //             '        No items in 😩\nMaybe add items to? 🙄'))
+                    //     : ListView.builder(
+                    //         padding: EdgeInsets.zero,
+                    //         shrinkWrap: true,
+                    //         itemCount: ads.length,
+                    //         physics: const BouncingScrollPhysics(
+                    //             parent: AlwaysScrollableScrollPhysics()),
+                    //         itemBuilder: (ctx, index) {
+                    //           Advertisement a = ads[index];
+                    //           //print(menu.getItemsByCategory(c.id));
+                    //           return AdvertisementCard(a: a);
+                    //         },
+                    //       ),
+                    Column(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.685,
+                      width: double.infinity,
+                      child: Paginator.listView(
+                        key: paginatorGlobalKey,
+                        pageLoadFuture: fetchAdvertisements,
+                        pageItemsGetter: listItemsGetter,
+                        listItemBuilder: listItemBuilder,
+                        loadingWidgetBuilder: loadingWidgetMaker,
+                        errorWidgetBuilder: errorWidgetMaker,
+                        emptyListWidgetBuilder: emptyListWidgetMaker,
+                        totalItemsGetter: totalPagesGetter,
+                        pageErrorChecker: pageErrorChecker,
+                        scrollPhysics: const BouncingScrollPhysics(
                             parent: AlwaysScrollableScrollPhysics()),
-                        itemBuilder: (ctx, index) {
-                          Advertisement a = ads[index];
-                          //print(menu.getItemsByCategory(c.id));
-                          return Card(
-                              margin: const EdgeInsets.all(15.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              elevation: 8.0,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Hero(
-                                    tag: a.id,
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 200,
-                                      child: FlatButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(context,
-                                              VideoDetailScreen.routeName);
-                                          print("beep");
-                                        },
-                                        child: null,
-                                        highlightColor: Colors.transparent,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15.0),
-                                          ),
-                                        ),
-                                        splashColor: kAccent,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: kAccent,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(15.0)),
-                                        image: DecorationImage(
-                                          image: NetworkImage(a.thumbnail),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        padding: const EdgeInsets.only(
-                                            top: 16.0, left: 16.0, right: 16.0),
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                2.1,
-                                        child: Text(a.title,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w100)),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 16.0, left: 16.0, right: 16.0),
-                                        child: Text('${a.offerEnds}',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: buttonColor)),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 16.0,
-                                            left: 16.0,
-                                            right: 16.0),
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                2.1,
-                                        child: Text(a.brand,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w100,
-                                                color: Colors.grey)),
-                                      ),
-                                      // Padding(
-                                      //   padding: const EdgeInsets.only(bottom:16, left: 16.0, right:16.0),
-                                      //   child: Text('${a.offerEnds}',
-                                      //       style: TextStyle(
-                                      //           fontWeight: FontWeight.bold)),
-                                      // ),
-                                    ],
-                                  ),
-                                  // ExpandIcon(
-                                  //   onPressed: (bool value) {},
-                                  // )
-                                ],
-                              ));
-                        },
+                        // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        //     crossAxisCount: 1),
                       ),
+                    ),
+                    SizedBox(width: getProportionateScreenWidth(20))
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class AdvertisementCard extends StatelessWidget {
+  const AdvertisementCard({
+    Key key,
+    @required this.a,
+  }) : super(key: key);
+
+  final Advertisement a;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        margin: const EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        elevation: 8.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Hero(
+              tag: a.id,
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                child: FlatButton(
+                  onPressed: () {
+                    // Navigator.pushNamed(
+                    //   context,
+                    //   VideoDetailScreen.routeName,
+                    //   arguments: ScreenArguments(a),
+                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => VideoDetailScreen(a: a)),
+                    );
+                  },
+                  child: null,
+                  highlightColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15.0),
+                    ),
+                  ),
+                  splashColor: kAccent,
+                ),
+                decoration: BoxDecoration(
+                  color: kAccent,
+                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  image: DecorationImage(
+                    image: NetworkImage(a.thumbnail),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  padding:
+                      const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+                  width: MediaQuery.of(context).size.width / 2.1,
+                  child: Text(a.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.w100)),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+                  child: Text('${a.offer_ends.replaceFirst(' ', '\n')}',
+                      maxLines: 3,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: buttonColor,
+                          fontSize: 12)),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(
+                      bottom: 16.0, left: 16.0, right: 16.0),
+                  width: MediaQuery.of(context).size.width / 2.1,
+                  child: Text(a.brand,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w100, color: Colors.grey)),
+                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(bottom:16, left: 16.0, right:16.0),
+                //   child: Text('${a.offerEnds}',
+                //       style: TextStyle(
+                //           fontWeight: FontWeight.bold)),
+                // ),
+              ],
+            ),
+            // ExpandIcon(
+            //   onPressed: (bool value) {},
+            // )
+          ],
+        ));
   }
 }

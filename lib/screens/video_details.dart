@@ -1,6 +1,7 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:idea_deck/network/http.dart';
 import 'package:idea_deck/screens/questions.dart';
 
 import '../constants.dart';
@@ -8,6 +9,9 @@ import '../models/ads.dart';
 
 class VideoDetailScreen extends StatefulWidget {
   static String routeName = "/details";
+  final Advertisement a;
+
+  VideoDetailScreen({this.a});
 
   @override
   _VideoDetailScreenState createState() => _VideoDetailScreenState();
@@ -43,7 +47,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
             controlsConfiguration: controlsConfiguration);
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
-      'https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4',
+      '${getVideoUrl(widget.a.video)}',
     );
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
@@ -52,6 +56,9 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ScreenArguments ad = ModalRoute.of(context).settings.arguments;
+    print('${getVideoUrl(widget.a.video)}');
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -76,7 +83,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "All in or nothing, win a pair of boots!",
+                          widget.a.title,
                           maxLines: 4,
                           style: Theme.of(context).textTheme.subtitle1.copyWith(
                               color: kPrimaryColor,
@@ -87,7 +94,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                           //   borderRadius: BorderRadius.circular(15.0),
                           // ),
                           backgroundColor: kAccent,
-                          label: Text('Cheez',
+                          label: Text(widget.a.brand,
                               style: TextStyle(
                                   fontSize: 12.0, color: kPrimaryColor)),
                         ),
@@ -100,7 +107,9 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         Text(
-                          "4520",
+                          (widget.a.participates != null)
+                              ? widget.a.participates.toString()
+                              : '0',
                           style: Theme.of(context).textTheme.headline5.copyWith(
                               color: kPrimaryColor,
                               fontWeight: FontWeight.bold),
@@ -126,7 +135,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
                 child: Text(
-                  'D/SurfaceUtils(14820): disconnecting from surface 0x779a59c010, reason disconnectFromSurfaceD/CCodecBufferChannel(14820): [c2.qti.avc.decoder#142] MediaCodec discarded an unknown bufferI/chatty  (14820): uid=10297(com.ideadeck.idea_deck) MediaCodec_loop identical 6 linesD/CCodecBufferChannel(14820): [c2.qti.avc.decoder#142] MediaCodec discarded an unknown bufferD/SurfaceUtils(14820): disconnecting from surface 0x779a6199c0, reason disconnectFromSurfaceI/hw-BpHwBinder(14820): onLastStrongRef automatically unlinking death recipients D/SurfaceUtils(14820): disconnecting from surface 0x779a59c010, reason disconnectFromSurfaceD/CCodecBufferChannel(14820): [c2.qti.avc.decoder#142] MediaCodec discarded an unknown bufferI/chatty  (14820): uid=10297(com.ideadeck.idea_deck) MediaCodec_loop identical 6 linesD/CCodecBufferChannel(14820): [c2.qti.avc.decoder#142] MediaCodec discarded an unknown bufferD/SurfaceUtils(14820): disconnecting from surface 0x779a6199c0, reason disconnectFromSurfaceI/hw-BpHwBinder(14820): onLastStrongRef automatically unlinking death recipients',
+                  widget.a.description,
                   style: Theme.of(context)
                       .textTheme
                       .caption
@@ -171,8 +180,12 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                                 fontSize: 27),
                           ),
                         ),
-                        onTap: () => Navigator.pushNamed(
-                            context, QuestionsScreen.routeName),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  QuestionsScreen(id: widget.a.id)),
+                        ),
                       ),
                     ),
                   ),
