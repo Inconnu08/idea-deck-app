@@ -7,11 +7,11 @@
 				0,
 				0
 			],
-			"width": 300,
-			"height": 300,
+			"width": 280,
+			"height": 280,
 			"origin": [
-				0,
-				0
+				-0.0357142873108387,
+				-0.0357142873108387
 			],
 			"clipContents": true,
 			"color": [
@@ -172,8 +172,8 @@
 					"opacity": 1,
 					"isCollapsed": false,
 					"clips": [],
-					"width": 130,
-					"height": 130,
+					"width": 150,
+					"height": 150,
 					"type": "ellipse"
 				},
 				{
@@ -797,7 +797,7 @@
 				{
 					"name": "play",
 					"fps": 60,
-					"duration": 2,
+					"duration": 1.7166666666666666,
 					"isLooping": false,
 					"keyed": [
 						{
@@ -805,7 +805,7 @@
 							"scaleX": [
 								[
 									{
-										"time": 0.31666666666666665,
+										"time": 0.06666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 0.42,
 										"cubicY1": 0,
@@ -814,7 +814,7 @@
 										"value": 0
 									},
 									{
-										"time": 0.55,
+										"time": 0.43333333333333335,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -854,7 +854,7 @@
 							"scaleY": [
 								[
 									{
-										"time": 0.31666666666666665,
+										"time": 0.06666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 0.42,
 										"cubicY1": 0,
@@ -863,7 +863,7 @@
 										"value": 0
 									},
 									{
-										"time": 0.55,
+										"time": 0.43333333333333335,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -909,7 +909,7 @@
 							"strokeEnd": [
 								[
 									{
-										"time": 0.55,
+										"time": 0.43333333333333335,
 										"interpolatorType": 2,
 										"cubicX1": 0.5591397849462365,
 										"cubicY1": 0,
@@ -927,7 +927,7 @@
 							"strokeWidth": [
 								[
 									{
-										"time": 0.55,
+										"time": 0.43333333333333335,
 										"interpolatorType": 2,
 										"cubicX1": 0.5591397849462365,
 										"cubicY1": 0,
@@ -944,6 +944,27 @@
 							]
 						},
 						{
+							"component": 6,
+							"width": [
+								[
+									{
+										"time": 1.2500733333333118,
+										"interpolatorType": 1,
+										"value": 150
+									}
+								]
+							],
+							"height": [
+								[
+									{
+										"time": 1.2500733333333118,
+										"interpolatorType": 1,
+										"value": 150
+									}
+								]
+							]
+						},
+						{
 							"component": 7
 						},
 						{
@@ -951,7 +972,7 @@
 							"strokeOffset": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 0.6021505376344086,
 										"cubicY1": 0,
@@ -969,7 +990,7 @@
 							"strokeWidth": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -996,7 +1017,7 @@
 							"strokeEnd": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1029,7 +1050,7 @@
 							"strokeWidth": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1056,7 +1077,7 @@
 							"strokeEnd": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1083,7 +1104,7 @@
 							"strokeOffset": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 0.5967741935483871,
 										"cubicY1": 0,
@@ -1107,7 +1128,7 @@
 							"strokeWidth": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1134,7 +1155,7 @@
 							"strokeEnd": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1161,7 +1182,7 @@
 							"strokeOffset": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 0.5967741935483871,
 										"cubicY1": 0,
@@ -1185,7 +1206,7 @@
 							"strokeWidth": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1212,7 +1233,7 @@
 							"strokeEnd": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1239,7 +1260,7 @@
 							"strokeOffset": [
 								[
 									{
-										"time": 0.5,
+										"time": 0.21666666666666667,
 										"interpolatorType": 2,
 										"cubicX1": 0.5967741935483871,
 										"cubicY1": 0,
@@ -1263,7 +1284,7 @@
 							"strokeWidth": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1290,7 +1311,7 @@
 							"strokeEnd": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1317,7 +1338,7 @@
 							"strokeOffset": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 0.5967741935483871,
 										"cubicY1": 0,
@@ -1341,7 +1362,7 @@
 							"strokeWidth": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1368,7 +1389,7 @@
 							"strokeEnd": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1395,7 +1416,7 @@
 							"strokeOffset": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 0.5967741935483871,
 										"cubicY1": 0,
@@ -1419,7 +1440,7 @@
 							"strokeWidth": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1446,7 +1467,7 @@
 							"strokeEnd": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1473,7 +1494,7 @@
 							"strokeOffset": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 0.5967741935483871,
 										"cubicY1": 0,
@@ -1497,7 +1518,7 @@
 							"strokeWidth": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1524,7 +1545,7 @@
 							"strokeEnd": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 1,
 										"cubicY1": 0,
@@ -1551,7 +1572,7 @@
 							"strokeOffset": [
 								[
 									{
-										"time": 0.5333333333333333,
+										"time": 0.38333333333333336,
 										"interpolatorType": 2,
 										"cubicX1": 0.5967741935483871,
 										"cubicY1": 0,

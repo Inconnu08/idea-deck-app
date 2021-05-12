@@ -161,6 +161,7 @@ Future<Questionnaire> fetchQuestionnaire(int id) async {
     });
     if (response.statusCode == 200) {
       print('200');
+      print(response.body);
       return Questionnaire.fromJson(response.body);
     } else if (response.statusCode == 302) {
       print("ANSWERED!");

@@ -1,20 +1,26 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:idea_deck/models/product.dart';
+import 'package:idea_deck/widgets/product_card.dart';
 import 'package:provider/provider.dart';
 
+import '../button.dart';
 import '../constants.dart';
 import '../models/ads.dart';
 import '../models/questions.dart';
 import '../network/api.dart';
 import '../screens/success.dart';
 import '../screens/survey.dart';
+import '../size_config.dart';
+import 'home.dart';
 
 class QuestionsScreen extends StatefulWidget {
   static String routeName = "/questions";
   final int id;
 
-  const QuestionsScreen({Key key, this.id}) : super(key: key);
+  const QuestionsScreen({Key key, @required this.id}) : super(key: key);
 
   @override
   _QuestionsScreenState createState() => _QuestionsScreenState();
@@ -24,6 +30,35 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   Future<Questionnaire> fQuestionnaire;
   int totalQuestions;
   PageController _pageController;
+  var p = [
+    Product(
+        id: 1,
+        name: "Cheez Pizza",
+        price: 120,
+        image:
+            "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900",
+        url: "https://www.facebook.com/cheezbd/"),
+    Product(
+        id: 5,
+        name: "Cheez Juice",
+        price: 20,
+        image:
+            "https://i.pinimg.com/originals/7d/ab/9d/7dab9d75b959d2fd74d7bae9bc7f8b18.jpg",
+        url: "https://www.facebook.com/cheezbd/"),
+    Product(
+        id: 3,
+        name: "Cheez T Shirt",
+        price: 220,
+        image:
+            "https://cdn.shopify.com/s/files/1/0209/1522/products/party_pizza_tee_preview_1024x1024.jpg?v=1590534250",
+        url: "https://www.facebook.com/cheezbd/"),
+    Product(
+        id: 4,
+        name: "Cheez Mask",
+        price: 100,
+        image:
+            "https://trickortreatstudios.com/media/catalog/product/cache/1da4909b8e3ea5eea17a9fb4c6e4a516/p/i/pizza_fiend_1.png"),
+  ];
 
   @override
   void initState() {
@@ -42,58 +77,240 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          child: FutureBuilder<Questionnaire>(
-              future: fQuestionnaire,
-              builder: (BuildContext context, snapshot) {
-                print(snapshot.hasData);
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                  case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
-                  default:
-                    if (snapshot.hasError) {
-                      print(snapshot.error);
-                      return Center(
-                          child: Text(
-                              'Opps! Something went wrong! ${snapshot.error}'));
-                    } else {
-                      if (snapshot.hasData) {
-                        Questionnaire q = snapshot.data;
-                        totalQuestions = q.questions.length;
-                        context
-                            .read<QuestionnaireState>()
-                            .setTotalQuestions(widget.id, q.questions.length);
-
-                        print(q.questions);
-
-                        return SafeArea(
-                          child: SizedBox.expand(
-                            child: PageView(
-                              controller: _pageController,
-                              physics: const NeverScrollableScrollPhysics(),
-                              onPageChanged: (index) {
-                                setState(() => index);
-                              },
-                              children: <Widget>[
-                                // ADD QUESTIONS PAGE SLIDER
-                                for (Question q in q.questions)
-                                  QuestionCard(
-                                      pageController: _pageController,
-                                      question: q),
-                              ],
-                            ),
-                          ),
-                        );
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop(true);
+        Navigator.of(context).pop(true);
+        return true;
+      },
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Container(
+            child: FutureBuilder<Questionnaire>(
+                future: fQuestionnaire,
+                builder: (BuildContext context, snapshot) {
+                  print(snapshot.hasData);
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                    default:
+                      if (snapshot.hasError) {
+                        print(snapshot.error);
+                        return Center(
+                            child: Text(
+                                'Opps! Something went wrong! ${snapshot.error}'));
                       } else {
-                        return CircularProgressIndicator();
+                        if (snapshot.hasData) {
+                          Questionnaire q = snapshot.data;
+                          print(q);
+                          if (q.questions == null ||
+                              q.survey_questions == null) {
+                            context
+                                .read<QuestionnaireState>()
+                                .survey_questions = q.survey_questions;
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(height: 10),
+                                Container(
+                                  height: 250,
+                                  child: Center(
+                                      child: FlareActor("assets/check.flr",
+                                          alignment: Alignment.center,
+                                          fit: BoxFit.contain,
+                                          animation: 'play')),
+                                ),
+                                Text(
+                                  "You have successfully entered the draw!",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: kPrimaryColor),
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  "keep an eye out for the winner to be announced!",
+                                  style: Theme.of(context).textTheme.caption,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                            height:
+                                                SizeConfig.screenHeight * 0.04),
+                                        // Text(
+                                        //   "Thank you!",
+                                        //   textAlign: TextAlign.left,
+                                        //   style: Theme.of(context)
+                                        //       .textTheme
+                                        //       .headline6
+                                        //       .copyWith(color: kPrimaryColor),
+                                        // ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Here are some suggested products and other offers you might be interested in.",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption
+                                                .copyWith(color: Colors.grey),
+                                          ),
+                                        ),
+                                        SizedBox(height: 20),
+                                        SizedBox(
+                                            height:
+                                                getProportionateScreenHeight(
+                                                    20)),
+                                        Container(
+                                          height:
+                                              getProportionateScreenHeight(250),
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: p.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return ProductCard(
+                                                  product: p[index]);
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(
+                                            height:
+                                                getProportionateScreenHeight(
+                                                    20)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // Center(
+                                //   child: Container(
+                                //     width: 200,
+                                //     child: ThemeButton(
+                                //         color: buttonColor,
+                                //         text: "Go back",
+                                //         ontap: () =>
+                                //             Navigator.pushAndRemoveUntil<dynamic>(
+                                //               context,
+                                //               MaterialPageRoute<dynamic>(
+                                //                 builder: (BuildContext context) =>
+                                //                     HomeScreen(),
+                                //               ),
+                                //               (route) =>
+                                //                   false, //if you want to disable back feature set to false
+                                //             )),
+                                //   ),
+                                // ),
+                                WidgetDialog(),
+                                SizedBox(
+                                    height: getProportionateScreenHeight(20)),
+                              ],
+                            );
+                          }
+
+                          totalQuestions = q.questions.length;
+                          context
+                              .read<QuestionnaireState>()
+                              .setTotalQuestions(widget.id, q.questions.length);
+
+                          context.read<QuestionnaireState>().survey_questions =
+                              q.survey_questions;
+
+                          print(q.questions);
+
+                          return SafeArea(
+                            child: SizedBox.expand(
+                              child: PageView(
+                                controller: _pageController,
+                                physics: const NeverScrollableScrollPhysics(),
+                                onPageChanged: (index) {
+                                  setState(() => index);
+                                },
+                                children: <Widget>[
+                                  // ADD QUESTIONS PAGE SLIDER
+                                  for (Question q in q.questions)
+                                    QuestionCard(
+                                        pageController: _pageController,
+                                        question: q),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else {
+                          return CircularProgressIndicator();
+                        }
                       }
-                    }
-                }
-              }),
-        ));
+                  }
+                }),
+          )),
+    );
+  }
+}
+
+class WidgetDialog extends StatefulWidget {
+  const WidgetDialog({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _WidgetDialogState createState() => _WidgetDialogState();
+}
+
+class _WidgetDialogState extends State<WidgetDialog> {
+  void initState() {
+    super.initState();
+    if (context.read<QuestionnaireState>().survey_questions.isNotEmpty ||
+        context.read<QuestionnaireState>().survey_questions != null)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(Duration(seconds: 3)).then((_) {
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) => AlertDialog(
+                    title: Text("Survey",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    content: Text(
+                        "Would you like to complete a survey for an additional entry to the draw?"),
+                    // backgroundColor: this._color,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text("Yes"),
+                        textColor: Colors.green,
+                        onPressed: () {
+                          Navigator.of(context)
+                              .popAndPushNamed(SuccessScreen.routeName);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("No"),
+                        textColor: Colors.redAccent,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ));
+        });
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 2,
+    );
   }
 }
 

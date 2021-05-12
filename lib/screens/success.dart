@@ -74,11 +74,6 @@ class _SuccessScreenState extends State<SuccessScreen> {
                                     animation: 'play')),
                           ),
                           Text(
-                            "Best of luck!",
-                            style: Theme.of(context).textTheme.headline1,
-                          ),
-                          SizedBox(height: 15),
-                          Text(
                             "You have successfully entered the draw!",
                             style: Theme.of(context)
                                 .textTheme

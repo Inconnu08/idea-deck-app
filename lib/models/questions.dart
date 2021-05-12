@@ -82,7 +82,7 @@ class Questionnaire {
   final List<Survey_questions> survey_questions;
 
   Questionnaire({
-    @required this.questions,
+    this.questions,
     @required this.survey_questions,
   });
 
@@ -94,11 +94,19 @@ class Questionnaire {
   }
 
   factory Questionnaire.fromMap(Map<String, dynamic> map) {
+    // print('========================= ${map['questions']}');
+    var questions;
+    var survey;
+    if (map['questions'] != null)
+      questions = List<Question>.from(
+          map['questions']?.map((x) => Question.fromMap(x)));
+    if (map['survey_questions'] != null)
+      survey = List<Survey_questions>.from(
+          map['survey_questions']?.map((x) => Survey_questions.fromMap(x)));
+
     return Questionnaire(
-      questions: List<Question>.from(
-          map['questions']?.map((x) => Question.fromMap(x))),
-      survey_questions: List<Survey_questions>.from(
-          map['survey_questions']?.map((x) => Survey_questions.fromMap(x))),
+      questions: questions,
+      survey_questions: survey,
     );
   }
 
@@ -115,6 +123,7 @@ class QuestionnaireState with ChangeNotifier {
   int totalQuestions = 1;
   List<Map> questions = [];
   List<Map> survey = [];
+  List<Survey_questions> survey_questions;
 
   initState() {
     currentQuestionNo = 0;
