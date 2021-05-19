@@ -9,13 +9,19 @@ import 'package:http/http.dart';
 import 'package:idea_deck/database/shared_perf.dart';
 import 'package:idea_deck/models/leaderboard.dart';
 import 'package:idea_deck/network/api.dart';
+import 'package:idea_deck/network/connectivity.dart';
 import 'package:idea_deck/network/http.dart';
 import 'package:idea_deck/screens/profile.dart';
+import 'package:idea_deck/screens/survey.dart';
 import 'package:idea_deck/screens/video_details.dart';
+import 'package:idea_deck/utils/notifications.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../models/ads.dart';
 import '../size_config.dart';
+import '../theme.dart';
 import '../widgets/search_field.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,6 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    context
+        .read<NotificationService>()
+        .scheduledNotification(" widget.a.offer_end");
   }
 
   @override
@@ -45,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.bottom, SystemUiOverlay.top]);
+        
+    context.read<NotificationService>().context = context;
 
     print(SizeConfig.imageSizeMultiplier * 50);
     print(Theme.of(context).textTheme.headline1.toString());
@@ -405,8 +416,19 @@ class AdvertisementFeed extends StatefulWidget {
 class _AdvertisementFeedState extends State<AdvertisementFeed> {
   // final ads = getAds();
   GlobalKey<PaginatorState> paginatorGlobalKey = GlobalKey();
+  String searchCategory = 'All';
+
+  @override
+  void initState() {
+    Provider.of<NotificationService>(context, listen: false).initialize();
+    super.initState();
+  }
 
   Widget listItemBuilder(value, int index) {
+    // print(value.offer_ends);
+    // var dmyString = value.offer_ends;
+    // var dateTime1 = DateFormat('d/M/yyyy h:m a').parse(dmyString);
+    // print(dateTime1);
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: AdvertisementCard(a: value),
@@ -431,7 +453,8 @@ class _AdvertisementFeedState extends State<AdvertisementFeed> {
             padding: const EdgeInsets.only(top: 16.0),
             child: Text(pp.errorMessage ?? "error"),
           ),
-          FlatButton(
+          OutlinedButton(
+            style: outlineButtonStyle,
             onPressed: retryListener,
             child: const Text('Retry'),
           )
@@ -442,7 +465,7 @@ class _AdvertisementFeedState extends State<AdvertisementFeed> {
 
   Widget emptyListWidgetMaker(PaginatedProducts pp) {
     return const Center(
-      child: Text('No product in the list'),
+      child: Text('No advertiment found.\nSearch something else.'),
     );
   }
 
@@ -464,12 +487,44 @@ class _AdvertisementFeedState extends State<AdvertisementFeed> {
 
   Future<PaginatedProducts> fetchAdvertisements(int page) async {
     //   '${baseURL}videos?cat=${widget.category.slug}&page=$page',
+    int cat;
+    if (cat == 'All') cat = null;
+    switch (searchCategory) {
+      case 'All':
+        cat = null;
+        break;
+      case 'Currently open':
+        cat = 0;
+        break;
+      case 'Upcoming':
+        cat = 1;
+        break;
+      case 'Expired':
+        cat = 2;
+        break;
+      default:
+        cat = null;
+    }
+
     try {
-      final response = await get('${baseURL}videos?page=$page', headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ${sharedPrefs.token}',
-      });
+      ConnectionStatusSingleton connectionStatus =
+          ConnectionStatusSingleton.getInstance();
+
+      bool isConnected = await connectionStatus.checkConnection();
+
+      if (!isConnected) {
+        print("is not connected");
+        return PaginatedProducts.withError(
+            errorMessage: 'Please check your internet connection.');
+      }
+
+      final response = await get(
+          Uri.parse('${baseURL}videos?page=$page&cat=$cat'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ${sharedPrefs.token}',
+          });
       print(json.decode(response.body));
       return PaginatedProducts.fromResponse(response);
     } catch (e) {
@@ -496,22 +551,110 @@ class _AdvertisementFeedState extends State<AdvertisementFeed> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                        padding: const EdgeInsets.only(
-                            top: 8.0, bottom: 16.0, left: 16.0),
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: SearchField()),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: IconButton(
-                          icon: Icon(Icons.filter_list,
-                              size: 36, color: kPrimaryColor),
-                          onPressed: null),
-                    ),
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
+                  Widget>[
+                Container(
+                    padding: const EdgeInsets.only(
+                        top: 8.0, bottom: 16.0, left: 16.0),
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: SearchField(paginatorGlobalKey: paginatorGlobalKey)),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: IconButton(
+                      icon: Icon(Icons.filter_list,
+                          size: 36, color: kPrimaryColor),
+                      onPressed: () => showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext context) => AlertDialog(
+                                title: Text("Search filter",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                content: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 3,
+                                  child: Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Chip(
+                                          backgroundColor: kAccent,
+                                          label: Text(searchCategory,
+                                              style: TextStyle(
+                                                  fontSize: 12.0,
+                                                  color: kPrimaryColor)),
+                                        ),
+                                      ),
+                                      FlatButton(
+                                        child: Text("All"),
+                                        textColor: kPrimaryColor,
+                                        onPressed: () {
+                                          setState(() {
+                                            searchCategory = 'All';
+                                          });
+                                          paginatorGlobalKey.currentState
+                                              .changeState(
+                                                  pageLoadFuture:
+                                                      fetchAdvertisements,
+                                                  resetState: true);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text("Currently open"),
+                                        textColor: kPrimaryColor,
+                                        onPressed: () {
+                                          setState(() {
+                                            searchCategory = 'Currently open';
+                                          });
+                                          paginatorGlobalKey.currentState
+                                              .changeState(
+                                                  pageLoadFuture:
+                                                      fetchAdvertisements,
+                                                  resetState: true);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text("Upcoming"),
+                                        textColor: kPrimaryColor,
+                                        onPressed: () {
+                                          setState(() {
+                                            searchCategory = 'Upcoming';
+                                          });
+                                          paginatorGlobalKey.currentState
+                                              .changeState(
+                                                  pageLoadFuture:
+                                                      fetchAdvertisements,
+                                                  resetState: true);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text("Expired"),
+                                        textColor: kPrimaryColor,
+                                        onPressed: () {
+                                          setState(() {
+                                            searchCategory = "Expired";
+                                          });
+                                          paginatorGlobalKey.currentState
+                                              .changeState(
+                                                  pageLoadFuture:
+                                                      fetchAdvertisements,
+                                                  resetState: true);
+
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // backgroundColor: this._color,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)),
+                              ))),
+                ),
+              ]),
               Container(
                 height: MediaQuery.of(context).size.height * 0.685,
                 width: double.infinity,

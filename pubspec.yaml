@@ -28,39 +28,35 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  flutter_ffmpeg: ^0.3.0
-  firebase_core: ^0.7.0
-  cloud_firestore: ^0.16.0
-  firebase_storage: ^7.0.0
-  image_picker: ^0.6.7+22
-  flutter_custom_clippers: ^1.1.2
-  shape_of_view: ^1.0.2
-  flutter_svg: ^0.19.0
+  # firebase_core: ^1.1.1
+  # cloud_firestore: ^2.1.0
+  # firebase_storage: ^8.0.6
+  image_picker: ^0.7.5
+  # flutter_svg: ^0.19.0
   provider: ^5.0.0
-  shared_preferences: ^0.5.12+2
-  http: ^0.12.2
-  fluttertoast: ^7.1.1
+  shared_preferences: ^2.0.5
+  http: ^0.13.3
+  fluttertoast: ^8.0.6
   flutter_paginator: ^0.0.6
-  intl: ^0.16.1
-  image_cropper: ^1.2.2
-  path_provider: ^1.6.7
+  intl: ^0.17.0  
+  image_cropper: ^1.4.0 
+  path_provider: ^2.0.1
   flutter_webview_plugin: ^0.3.11
   # device_preview: ^0.5.5
-  connectivity: ^2.0.2
-  pull_to_refresh: ^1.6.3
-  animations: ^1.1.2
+  connectivity: ^3.0.3
+  # pull_to_refresh: ^1.6.3
+  animations: ^2.0.0 
   flutter_launcher_icons: ^0.8.0
-  progress_indicators: ^0.1.5
+  progress_indicators: ^1.0.0  
   auto_size_text: ^2.1.0
-  bottom_navy_bar: ^5.6.0
+  bottom_navy_bar: ^6.0.0 
   # chewie: ^0.12.2
   better_player: ^0.0.61
-  url_launcher: ^5.0.0
+  url_launcher: ^6.0.3 
   # video_player: any
-  firebase_auth:
-  firebase_auth_web:
-  rive: ^0.7.9
+  # firebase_auth:
   flare_flutter: ^3.0.0
+  flutter_local_notifications: ^5.0.0+4
 
 
 dev_dependencies:

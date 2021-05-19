@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
-import '../network/http.dart';
 
 class ConnectionStatusSingleton {
   static final ConnectionStatusSingleton _singleton =
@@ -41,7 +40,7 @@ class ConnectionStatusSingleton {
   //The test to actually see if there is a connection
   Future<bool> checkConnection() async {
     bool previousConnection = hasConnection;
-    print("check connectiuon.....");
+    print("check connection...");
     try {
       final result = await InternetAddress.lookup('echawkbazarbd.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {

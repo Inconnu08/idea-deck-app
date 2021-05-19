@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../constants.dart';
 import '../models/product.dart';
@@ -11,6 +10,8 @@ class ProductsSuggestionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// THIS SCREEN IS NOT USED AND SHOULD BE DELETED. 
+
     var p = [
       Product(
           id: 1,
@@ -77,7 +78,7 @@ class ProductsSuggestionsScreen extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemCount: p.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return ProductCard(product: p[index]);
+                        return ProductCard();
                       },
                     ),
                   ),

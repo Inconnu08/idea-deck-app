@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idea_deck/utils/notifications.dart';
 import 'package:provider/provider.dart';
 
 import './models/questions.dart';
@@ -24,6 +25,7 @@ main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => QuestionnaireState()),
+        ChangeNotifierProvider(create: (_) => NotificationService()),
       ],
       child: LayoutBuilder(builder: (context, constraints) {
         return OrientationBuilder(builder: (context, orientation) {

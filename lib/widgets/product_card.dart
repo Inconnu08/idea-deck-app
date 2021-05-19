@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:idea_deck/network/http.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constants.dart';
-import '../models/product.dart';
+import '../models/questions.dart';
 import '../size_config.dart';
 
 class ProductCard extends StatelessWidget {
@@ -14,11 +15,11 @@ class ProductCard extends StatelessWidget {
   }) : super(key: key);
 
   final double width, aspectRetio;
-  final Product product;
+  final SuggestedProduct product;
 
-  void _launchURL() async => await canLaunch(product.url)
-      ? await launch(product.url)
-      : throw 'Could not launch ${product.url}';
+  void _launchURL() async => await canLaunch(product.link)
+      ? await launch(product.link)
+      : throw 'Could not launch ${product.link}';
 
   @override
   Widget build(BuildContext context) {
@@ -42,24 +43,24 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: Hero(
                     tag: product.id.toString(),
-                    child: Image.network(product.image),
+                    child: Image.network('${domain}${product.image}'),
                   ),
                 ),
               ),
               const SizedBox(height: 10),
               Text(
-                product.name,
+                product.title,
                 style: TextStyle(color: Colors.black),
                 maxLines: 2,
               ),
-              Text(
-                "\৳${product.price.toString()}",
-                style: TextStyle(
-                  fontSize: getProportionateScreenWidth(18),
-                  fontWeight: FontWeight.w600,
-                  color: kPrimaryColor,
-                ),
-              )
+              // Text(
+              //   "\৳${product.price.toString()}",
+              //   style: TextStyle(
+              //     fontSize: getProportionateScreenWidth(18),
+              //     fontWeight: FontWeight.w600,
+              //     color: kPrimaryColor,
+              //   ),
+              // )
             ],
           ),
         ),

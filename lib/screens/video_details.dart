@@ -1,6 +1,10 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:idea_deck/utils/notifications.dart';
+import '../database/shared_perf.dart';
+import '../models/questions.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../models/ads.dart';
@@ -146,50 +150,99 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
             Expanded(child: Container()),
             Row(
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Answer questions',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w100,
-                        fontSize: 14,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.only(topLeft: Radius.circular(40)),
-                        color: kPrimaryColor),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: kAccent,
-                        child: Container(
-                          child: Text(
-                            'Start',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 27),
+                if (widget.a.winner != null)
+                  if (widget.a.winner == sharedPrefs.uid)
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 70,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                                topRight: Radius.circular(40)),
+                            color: kPrimaryColor),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                'You won!',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 27),
+                              ),
+                              Text(
+                                sharedPrefs.uid
+                                    .substring(sharedPrefs.uid.length - 7),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ],
                           ),
                         ),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  QuestionsScreen(id: widget.a.id)),
+                      ),
+                    ),
+                if (widget.a.winner == null)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Answer questions',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w100,
+                          fontSize: 14,
                         ),
+                        textAlign: TextAlign.left,
                       ),
                     ),
                   ),
-                )
+                if (widget.a.winner == null)
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.only(topLeft: Radius.circular(40)),
+                          color: (widget.a.status != 3)
+                              ? kPrimaryColor
+                              : Colors.grey),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          splashColor: kAccent,
+                          child: Container(
+                            child: Text(
+                              (widget.a.status != 3) ? 'Start' : 'Expired',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 27),
+                            ),
+                          ),
+                          onTap: () => (widget.a.status != 3)
+                              ? () {
+                                  context
+                                      .read<QuestionnaireState>()
+                                      .offer_ends = widget.a.offer_ends;
+                                  context
+                                      .read<NotificationService>()
+                                      .scheduledNotification(
+                                          widget.a.offer_ends);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => QuestionsScreen(
+                                              id: widget.a.id)));
+                                }()
+                              : null,
+                        ),
+                      ),
+                    ),
+                  )
               ],
             ),
           ],

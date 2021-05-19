@@ -23,7 +23,7 @@ InputDecorationTheme inputDecorationTheme() {
   );
 
   return InputDecorationTheme(
-    contentPadding: EdgeInsets.only(top: 42,  bottom: 20),
+    contentPadding: EdgeInsets.only(top: 42, bottom: 20),
     // enabledBorder: outlineInputBorder,
     focusedBorder: underlineInputBorder,
     // border: outlineInputBorder,
@@ -46,3 +46,12 @@ AppBarTheme appBarTheme() {
     ),
   );
 }
+
+final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
+  primary: kPrimaryColor,
+  minimumSize: Size(88, 38),
+  padding: EdgeInsets.symmetric(horizontal: 16),
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(Radius.circular(8)),
+  ),
+);

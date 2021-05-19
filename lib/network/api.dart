@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
-import 'package:idea_deck/database/shared_perf.dart';
-import 'package:idea_deck/models/leaderboard.dart';
-import 'package:idea_deck/models/profile.dart';
-import 'package:idea_deck/models/questions.dart';
-import 'package:idea_deck/network/connectivity.dart';
+import '../database/shared_perf.dart';
+import '../models/leaderboard.dart';
+import '../models/profile.dart';
+import '../models/questions.dart';
+import '../network/connectivity.dart';
 
 import 'http.dart';
 
 login(String phone, String password) async {
-  var response = await post('${baseURL}signin/',
+  var response = await post(Uri.parse('${baseURL}signin/'),
       body: jsonEncode({"phone": phone, "password": password}),
       headers: {
         'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ Future<dynamic> fetchHome() async {
   }
 
   try {
-    final response = await get('${baseURL}category/', headers: {
+    final response = await get(Uri.parse('${baseURL}category/'), headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',
@@ -76,7 +76,7 @@ Future<Profile> fetchProfile() async {
   }
 
   try {
-    final response = await get('${baseURL}profile/', headers: {
+    final response = await get(Uri.parse('${baseURL}profile/'), headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',
@@ -117,7 +117,7 @@ Future<Leaderboard> fetchLeaderBoard() async {
   }
 
   try {
-    final response = await get('${baseURL}leaderboard/', headers: {
+    final response = await get(Uri.parse('${baseURL}leaderboard/'), headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',
@@ -154,7 +154,7 @@ Future<Questionnaire> fetchQuestionnaire(int id) async {
   }
 
   try {
-    final response = await get('${baseURL}questions/$id', headers: {
+    final response = await get(Uri.parse('${baseURL}questions/$id'), headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',
@@ -163,9 +163,6 @@ Future<Questionnaire> fetchQuestionnaire(int id) async {
       print('200');
       print(response.body);
       return Questionnaire.fromJson(response.body);
-    } else if (response.statusCode == 302) {
-      print("ANSWERED!");
-      return null;
     } else {
       print(response.body);
       throw Exception(
@@ -195,7 +192,7 @@ Future<bool> postAnswers(int id, String data) async {
 
   try {
     final response =
-        await post('${baseURL}questions/$id', body: data, headers: {
+        await post(Uri.parse('${baseURL}questions/$id'), body: data, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',

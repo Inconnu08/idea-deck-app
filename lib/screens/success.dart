@@ -31,10 +31,11 @@ class _SuccessScreenState extends State<SuccessScreen> {
   }
 
   changeOpacity() {
+    if (opacity == 1.0) return;
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         opacity = 1.0;
-        // changeOpacity();
+        print("object");
       });
     });
   }
@@ -47,6 +48,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
       child: FutureBuilder<bool>(
           future: postAnswersFuture,
           builder: (BuildContext context, snapshot) {
+            print("snapshot.hasData");
             print(snapshot.hasData);
             switch (snapshot.connectionState) {
               case ConnectionState.none:

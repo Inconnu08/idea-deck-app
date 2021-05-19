@@ -2,11 +2,8 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:idea_deck/models/product.dart';
-import 'package:idea_deck/widgets/product_card.dart';
 import 'package:provider/provider.dart';
 
-import '../button.dart';
 import '../constants.dart';
 import '../models/ads.dart';
 import '../models/questions.dart';
@@ -14,7 +11,7 @@ import '../network/api.dart';
 import '../screens/success.dart';
 import '../screens/survey.dart';
 import '../size_config.dart';
-import 'home.dart';
+import '../widgets/product_card.dart';
 
 class QuestionsScreen extends StatefulWidget {
   static String routeName = "/questions";
@@ -30,35 +27,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   Future<Questionnaire> fQuestionnaire;
   int totalQuestions;
   PageController _pageController;
-  var p = [
-    Product(
-        id: 1,
-        name: "Cheez Pizza",
-        price: 120,
-        image:
-            "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900",
-        url: "https://www.facebook.com/cheezbd/"),
-    Product(
-        id: 5,
-        name: "Cheez Juice",
-        price: 20,
-        image:
-            "https://i.pinimg.com/originals/7d/ab/9d/7dab9d75b959d2fd74d7bae9bc7f8b18.jpg",
-        url: "https://www.facebook.com/cheezbd/"),
-    Product(
-        id: 3,
-        name: "Cheez T Shirt",
-        price: 220,
-        image:
-            "https://cdn.shopify.com/s/files/1/0209/1522/products/party_pizza_tee_preview_1024x1024.jpg?v=1590534250",
-        url: "https://www.facebook.com/cheezbd/"),
-    Product(
-        id: 4,
-        name: "Cheez Mask",
-        price: 100,
-        image:
-            "https://trickortreatstudios.com/media/catalog/product/cache/1da4909b8e3ea5eea17a9fb4c6e4a516/p/i/pizza_fiend_1.png"),
-  ];
 
   @override
   void initState() {
@@ -67,6 +35,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     context.read<QuestionnaireState>().initState();
     fQuestionnaire = fetchQuestionnaire(widget.id);
     _pageController = PageController();
+    context.read<QuestionnaireState>().questionId = widget.id;
     super.initState();
   }
 
@@ -106,9 +75,10 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                           print(q);
                           if (q.questions == null ||
                               q.survey_questions == null) {
-                            context
-                                .read<QuestionnaireState>()
-                                .survey_questions = q.survey_questions;
+                            if (q.survey_questions != null)
+                              context
+                                  .read<QuestionnaireState>()
+                                  .survey_questions = q.survey_questions;
 
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -138,7 +108,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                   style: Theme.of(context).textTheme.caption,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
                                   child: SingleChildScrollView(
                                     child: Column(
                                       mainAxisAlignment:
@@ -149,14 +120,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                         SizedBox(
                                             height:
                                                 SizeConfig.screenHeight * 0.04),
-                                        // Text(
-                                        //   "Thank you!",
-                                        //   textAlign: TextAlign.left,
-                                        //   style: Theme.of(context)
-                                        //       .textTheme
-                                        //       .headline6
-                                        //       .copyWith(color: kPrimaryColor),
-                                        // ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
@@ -177,11 +140,12 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                               getProportionateScreenHeight(250),
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
-                                            itemCount: p.length,
+                                            itemCount: q.suggestions.length,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
                                               return ProductCard(
-                                                  product: p[index]);
+                                                  product:
+                                                      q.suggestions[index]);
                                             },
                                           ),
                                         ),
@@ -269,10 +233,12 @@ class WidgetDialog extends StatefulWidget {
 class _WidgetDialogState extends State<WidgetDialog> {
   void initState() {
     super.initState();
-    if (context.read<QuestionnaireState>().survey_questions.isNotEmpty ||
-        context.read<QuestionnaireState>().survey_questions != null)
+    if (context.read<QuestionnaireState>().survey_questions != null) if (context
+        .read<QuestionnaireState>()
+        .survey_questions
+        .isNotEmpty)
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Future.delayed(Duration(seconds: 3)).then((_) {
+        Future.delayed(Duration(seconds: 2)).then((_) {
           showDialog(
               context: context,
               barrierDismissible: false,
@@ -290,7 +256,7 @@ class _WidgetDialogState extends State<WidgetDialog> {
                         textColor: Colors.green,
                         onPressed: () {
                           Navigator.of(context)
-                              .popAndPushNamed(SuccessScreen.routeName);
+                              .popAndPushNamed(SurveyScreen.routeName);
                         },
                       ),
                       FlatButton(

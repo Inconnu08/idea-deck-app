@@ -1,4 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_paginator/flutter_paginator.dart';
+import 'package:http/http.dart';
+import 'package:idea_deck/database/shared_perf.dart';
+import 'package:idea_deck/models/ads.dart';
+import 'package:idea_deck/network/http.dart';
 
 import '../constants.dart';
 import '../size_config.dart';
@@ -6,7 +14,10 @@ import '../size_config.dart';
 class SearchField extends StatelessWidget {
   const SearchField({
     Key key,
+    this.paginatorGlobalKey,
   }) : super(key: key);
+
+  final GlobalKey<PaginatorState> paginatorGlobalKey;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +31,35 @@ class SearchField extends StatelessWidget {
       child: TextField(
           textInputAction: TextInputAction.search,
           onSubmitted: (value) {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //       builder: (context) =>
-            //           ProductSearchScreen(searchQuery: value)),
-            // );
             print(value);
+
+            Future<PaginatedProducts> searchAdvertisements(int page) async {
+              //   '${baseURL}videos?cat=${widget.category.slug}&page=$page',
+
+              try {
+                final response = await get(
+                    Uri.parse('${baseURL}videos?page=$page&q=$value'),
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json',
+                      'Authorization': 'Bearer ${sharedPrefs.token}',
+                    });
+                print(json.decode(response.body));
+                return PaginatedProducts.fromResponse(response);
+              } catch (e) {
+                if (e is IOException) {
+                  return PaginatedProducts.withError(
+                      errorMessage: 'Please check your internet connection.');
+                } else {
+                  print(e.toString());
+                  return PaginatedProducts.withError(
+                      errorMessage: 'Something went wrong.');
+                }
+              }
+            }
+
+            paginatorGlobalKey.currentState.changeState(
+                pageLoadFuture: searchAdvertisements, resetState: true);
           },
           decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
