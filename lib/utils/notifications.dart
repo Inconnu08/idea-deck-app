@@ -88,19 +88,21 @@ class NotificationService extends ChangeNotifier {
 
   //Scheduled Notification
 
-  Future scheduledNotification(String time) async {
+  Future scheduledNotification(
+      {@required String time,
+      @required int qid,
+      @required String brand}) async {
     await initializetimezone();
-    print("object");
     // instantNofitication();
     //stylishNotification();
     // var locale = tz.getLocation('Bangladesh/Dhaka');
     // print(locale);
-    print('18/05/2021 9:31 PM');
-    var d = DateFormat('d/M/yyyy h:m a').parse('18/05/2021 10:57 PM');
-    print(d.day);
-    tz.TZDateTime zonedTime =
-        tz.TZDateTime.local(d.year, d.month, d.day, d.hour, d.minute);
-    print(zonedTime);
+    // print('18/05/2021 9:31 PM');
+    var d = DateFormat('d/M/yyyy h:m a').parse(time);
+    // print(d.day);
+    // tz.TZDateTime zonedTime =
+    //     tz.TZDateTime.local(d.year, d.month, d.day, d.hour, d.minute);
+    // print(zonedTime);
     // var interval = RepeatInterval.everyMinute;
     // var bigPicture = BigPictureStyleInformation(
     //     DrawableResourceAndroidBitmap("ic_launcher"),
@@ -156,10 +158,10 @@ class NotificationService extends ChangeNotifier {
     await _flutterLocalNotificationsPlugin.schedule(
       2,
       "Winner has been announced!",
-      "Find out if you won the draw from Pizzahut",
-      DateTime.now(),
+      "Find out if you won the draw from $brand",
+      d,
       platform,
-      payload: '2',
+      payload: qid.toString(),
       androidAllowWhileIdle: true,
     );
   }

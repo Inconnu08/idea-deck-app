@@ -1,15 +1,15 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:idea_deck/utils/notifications.dart';
-import '../database/shared_perf.dart';
-import '../models/questions.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import '../database/shared_perf.dart';
 import '../models/ads.dart';
+import '../models/questions.dart';
 import '../network/http.dart';
 import '../screens/questions.dart';
+import '../utils/notifications.dart';
 
 class VideoDetailScreen extends StatefulWidget {
   static String routeName = "/details";
@@ -26,8 +26,8 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
 
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: kPrimaryColor));
+    // SystemChrome.setSystemUIOverlayStyle(
+    //     SystemUiOverlayStyle(statusBarColor: kPrimaryColor));
 
     BetterPlayerControlsConfiguration controlsConfiguration =
         BetterPlayerControlsConfiguration(
@@ -228,10 +228,12 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                                   context
                                       .read<QuestionnaireState>()
                                       .offer_ends = widget.a.offer_ends;
-                                  context
-                                      .read<NotificationService>()
-                                      .scheduledNotification(
-                                          widget.a.offer_ends);
+                                  context.read<QuestionnaireState>().brand =
+                                      widget.a.brand;
+                                  // context
+                                  //     .read<NotificationService>()
+                                  //     .scheduledNotification(
+                                  //         widget.a.offer_ends);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

@@ -178,6 +178,7 @@ class QuestionnaireState with ChangeNotifier {
   int currentQuestionNo = 0;
   int totalQuestions = 1;
   String offer_ends;
+  String brand;
   List<Map> questions = [];
   List<Map> survey = [];
   List<Survey_questions> survey_questions;
@@ -224,7 +225,5 @@ class QuestionnaireState with ChangeNotifier {
     return jsonEncode({'questions': questions, 'survey': survey});
   }
 
-  addOfferNotification() async {
-
-  }
+  addOfferNotification() async {}
 }

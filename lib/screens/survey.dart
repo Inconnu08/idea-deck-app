@@ -24,8 +24,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: kPrimaryColor));
+    // SystemChrome.setSystemUIOverlayStyle(
+    //     SystemUiOverlayStyle(statusBarColor: kPrimaryColor));
   }
 
   void _saveForm() async {
@@ -44,27 +44,17 @@ class _SurveyScreenState extends State<SurveyScreen> {
     _loading = false;
     print(context.read<QuestionnaireState>().survey);
     Navigator.of(context).popAndPushNamed(SuccessScreen.routeName);
-
-    // Fluttertoast.showToast(
-    //     msg: "No internet connection!",
-    //     toastLength: Toast.LENGTH_LONG,
-    //     gravity: ToastGravity.BOTTOM,
-    //     timeInSecForIosWeb: 1,
-    //     backgroundColor: Colors.red,
-    //     textColor: Colors.white,
-    //     fontSize: 16.0);
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     // print("Screen");
     // print(SizeConfig.screenWidth * 0.1556);
     List<Survey_questions> survey_questions =
         context.read<QuestionnaireState>().survey_questions;
-    print(SizeConfig.imageSizeMultiplier * 50);
-    print(Theme.of(context).textTheme.headline1.toString());
+    // print(SizeConfig.imageSizeMultiplier * 50);
+    // print(Theme.of(context).textTheme.headline1.toString());
 
     // for (Survey_questions s in survey_questions) print(s.question);
 
@@ -90,7 +80,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Although the survey is completely optional, completing will earn you another entry to the draw!",
+                    "Although the survey is completely optional, completing this survey will earn you another entry to the draw!",
                     style: Theme.of(context)
                         .textTheme
                         .caption
@@ -166,21 +156,16 @@ class SurveyQuestionWidget extends StatelessWidget {
           minLines: 3,
           maxLines: 4,
           keyboardType: TextInputType.text,
-          // validator: (value) => validateMobile(value),
           onSaved: (newValue) => newValue,
           onChanged: (value) {
-            if (value.isNotEmpty) {
-              // removeError(error: kEmailNullError);
-            }
+            if (value.isNotEmpty) {}
             return null;
           },
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(0),
             labelText: "",
             labelStyle: const TextStyle(color: kPrimaryColor),
-            // hintText: "Enter your phone number",
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            // suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
           ),
           onFieldSubmitted: (newValue) {
             context.read<QuestionnaireState>().addSurveyAnswer(id, newValue);

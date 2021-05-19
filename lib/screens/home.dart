@@ -39,9 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    context
-        .read<NotificationService>()
-        .scheduledNotification(" widget.a.offer_end");
   }
 
   @override

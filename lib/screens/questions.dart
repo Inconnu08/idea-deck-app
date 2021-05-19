@@ -2,6 +2,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:idea_deck/utils/notifications.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
@@ -157,24 +158,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                     ),
                                   ),
                                 ),
-                                // Center(
-                                //   child: Container(
-                                //     width: 200,
-                                //     child: ThemeButton(
-                                //         color: buttonColor,
-                                //         text: "Go back",
-                                //         ontap: () =>
-                                //             Navigator.pushAndRemoveUntil<dynamic>(
-                                //               context,
-                                //               MaterialPageRoute<dynamic>(
-                                //                 builder: (BuildContext context) =>
-                                //                     HomeScreen(),
-                                //               ),
-                                //               (route) =>
-                                //                   false, //if you want to disable back feature set to false
-                                //             )),
-                                //   ),
-                                // ),
                                 WidgetDialog(),
                                 SizedBox(
                                     height: getProportionateScreenHeight(20)),
@@ -211,7 +194,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                             ),
                           );
                         } else {
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         }
                       }
                   }
@@ -263,7 +246,8 @@ class _WidgetDialogState extends State<WidgetDialog> {
                         child: Text("No"),
                         textColor: Colors.redAccent,
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context)
+                              .popAndPushNamed(SurveyScreen.routeName);
                         },
                       ),
                     ],
@@ -393,7 +377,7 @@ class _QuestionCardState extends State<QuestionCard> {
                                             BorderRadius.circular(15)),
                                     actions: <Widget>[
                                       FlatButton(
-                                        child: Text("Yes"),
+                                        child: const Text("Yes"),
                                         textColor: Colors.green,
                                         onPressed: () {
                                           Navigator.of(context).popAndPushNamed(
@@ -401,10 +385,11 @@ class _QuestionCardState extends State<QuestionCard> {
                                         },
                                       ),
                                       FlatButton(
-                                        child: Text("No"),
+                                        child: const Text("No"),
                                         textColor: Colors.redAccent,
                                         onPressed: () {
-                                          Navigator.of(context).pop();
+                                          Navigator.of(context).popAndPushNamed(
+                                              SuccessScreen.routeName);
                                         },
                                       ),
                                     ],
@@ -415,7 +400,7 @@ class _QuestionCardState extends State<QuestionCard> {
                       return Container(
                         alignment: Alignment.center,
                         height: 80,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(40),
                                 topRight: Radius.circular(40)),
@@ -437,72 +422,75 @@ class _QuestionCardState extends State<QuestionCard> {
   }
 }
 
-class QuestionPostStatus extends StatelessWidget {
-  final int id;
-  QuestionPostStatus({
-    Key key,
-    @required this.id,
-  }) : super(key: key);
+// class QuestionPostStatus extends StatelessWidget {
+//   final int id;
+//   QuestionPostStatus({
+//     Key key,
+//     @required this.id,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    var data = context.read<QuestionnaireState>().jsonify();
-    return AlertDialog(
-      content: Container(
-        height: 200,
-        child: FutureBuilder<bool>(
-            future: postAnswers(id, data),
-            builder: (BuildContext context, snapshot) {
-              print(snapshot.hasData);
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                case ConnectionState.waiting:
-                  return Center(child: CircularProgressIndicator());
-                default:
-                  if (snapshot.hasError) {
-                    print(snapshot.error);
-                    return Center(child: Text('Opps! Something went wrong!'));
-                  } else {
-                    if (snapshot.hasData) {
-                      Fluttertoast.showToast(
-                          msg: 'Successfully submitted!',
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      return Center(child: CircularProgressIndicator());
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  }
-              }
-            }),
-      ),
-      // backgroundColor: this._color,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      // actions: <Widget>[
-      //   FlatButton(
-      //     child: Text("Yes"),
-      //     textColor: Colors.green,
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //   ),
-      //   FlatButton(
-      //     child: Text("No"),
-      //     textColor: Colors.redAccent,
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //   ),
-      // ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     var data = context.read<QuestionnaireState>().jsonify();
+//     return AlertDialog(
+//       content: Container(
+//         height: 200,
+//         child: FutureBuilder<bool>(
+//             future: postAnswers(id, data),
+//             builder: (BuildContext context, snapshot) {
+//               print(snapshot.hasData);
+//               switch (snapshot.connectionState) {
+//                 case ConnectionState.none:
+//                 case ConnectionState.waiting:
+//                   return Center(child: CircularProgressIndicator());
+//                 default:
+//                   if (snapshot.hasError) {
+//                     print(snapshot.error);
+//                     return Center(child: Text('Opps! Something went wrong!'));
+//                   } else {
+//                     if (snapshot.hasData) {
+//                       context
+//                           .read<NotificationService>()
+//                           .scheduledNotification(a.offer_end);
+//                       Fluttertoast.showToast(
+//                           msg: 'Successfully submitted!',
+//                           toastLength: Toast.LENGTH_LONG,
+//                           gravity: ToastGravity.BOTTOM,
+//                           timeInSecForIosWeb: 1,
+//                           backgroundColor: Colors.green,
+//                           textColor: Colors.white,
+//                           fontSize: 16.0);
+//                       Navigator.of(context).pop();
+//                       Navigator.of(context).pop();
+//                       return Center(child: CircularProgressIndicator());
+//                     } else {
+//                       return Center(child: CircularProgressIndicator());
+//                     }
+//                   }
+//               }
+//             }),
+//       ),
+//       // backgroundColor: this._color,
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+//       // actions: <Widget>[
+//       //   FlatButton(
+//       //     child: Text("Yes"),
+//       //     textColor: Colors.green,
+//       //     onPressed: () {
+//       //       Navigator.of(context).pop();
+//       //     },
+//       //   ),
+//       //   FlatButton(
+//       //     child: Text("No"),
+//       //     textColor: Colors.redAccent,
+//       //     onPressed: () {
+//       //       Navigator.of(context).pop();
+//       //     },
+//       //   ),
+//       // ],
+//     );
+//   }
+// }
 
 class AnswerOption extends StatelessWidget {
   final String answer;
