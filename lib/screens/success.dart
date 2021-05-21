@@ -1,14 +1,14 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:idea_deck/utils/notifications.dart';
 import 'package:provider/provider.dart';
 
-import '../button.dart';
 import '../constants.dart';
 import '../models/questions.dart';
 import '../network/api.dart';
+import '../screens/questions.dart';
 import '../size_config.dart';
-import 'home.dart';
+import '../utils/notifications.dart';
+import '../widgets/product_card.dart';
 
 class SuccessScreen extends StatefulWidget {
   static String routeName = "/success";
@@ -20,17 +20,27 @@ class SuccessScreen extends StatefulWidget {
 class _SuccessScreenState extends State<SuccessScreen> {
   double opacity = 0;
   Future<bool> postAnswersFuture;
+  Future<Questionnaire> fQuestionnaire;
 
   @override
   void initState() {
     super.initState();
+    print(
+        '================================================= ${context.read<QuestionnaireState>().offer_ends}');
+    // schedule the notification
     context.read<NotificationService>().scheduledNotification(
         time: context.read<QuestionnaireState>().offer_ends,
         brand: context.read<QuestionnaireState>().brand,
         qid: context.read<QuestionnaireState>().questionId);
+
+    // post the answers for questionanire and survey
     postAnswersFuture = postAnswers(
         context.read<QuestionnaireState>().questionId,
         context.read<QuestionnaireState>().jsonify());
+
+    // fetch suggested products
+    fQuestionnaire =
+        fetchQuestionnaire(context.read<QuestionnaireState>().questionId);
   }
 
   changeOpacity() {
@@ -38,7 +48,6 @@ class _SuccessScreenState extends State<SuccessScreen> {
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         opacity = 1.0;
-        print("object");
       });
     });
   }
@@ -51,8 +60,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
       child: FutureBuilder<bool>(
           future: postAnswersFuture,
           builder: (BuildContext context, snapshot) {
-            print("snapshot.hasData");
-            print(snapshot.hasData);
+            print('postAnswersFuture snapshot: ${snapshot.hasData}');
             switch (snapshot.connectionState) {
               case ConnectionState.none:
               case ConnectionState.waiting:
@@ -65,8 +73,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   if (snapshot.hasData) {
                     if (snapshot.data == true) {
                       changeOpacity();
-                      var s =
-                          context.read<QuestionnaireState>().suggestions;
+                      var s = context.read<QuestionnaireState>().suggestions;
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,7 +83,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                           Container(
                             height: 250,
                             child: Center(
-                                child: FlareActor("assets/check.flr",
+                                child: const FlareActor("assets/check.flr",
                                     alignment: Alignment.center,
                                     fit: BoxFit.contain,
                                     animation: 'play')),
@@ -85,7 +92,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                             "You have successfully entered the draw!",
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5
+                                .headline4
                                 .copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: kPrimaryColor),
@@ -115,35 +122,76 @@ class _SuccessScreenState extends State<SuccessScreen> {
                                           .copyWith(color: Colors.grey),
                                     ),
                                   ),
-                                  SizedBox(height: 20),
                                   SizedBox(
                                       height: getProportionateScreenHeight(20)),
-                                  Container(
-                                    height: getProportionateScreenHeight(250),
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: q.suggestions.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return ProductCard(
-                                            product: q.suggestions[index]);
-                                      },
+                                  if (s != null)
+                                    if (s.isNotEmpty)
+                                      Container(
+                                        height:
+                                            getProportionateScreenHeight(250),
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: s.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return ProductCard(
+                                                product: s[index]);
+                                          },
+                                        ),
+                                      ),
+                                  if (s?.isNotEmpty)
+                                    Container(
+                                      height: getProportionateScreenHeight(250),
+                                      child: FutureBuilder<Questionnaire>(
+                                          future: fQuestionnaire,
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot snapshot) {
+                                            switch (snapshot.connectionState) {
+                                              case ConnectionState.none:
+                                              case ConnectionState.waiting:
+                                                return Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              default:
+                                                if (snapshot.hasData) {
+                                                  var s =
+                                                      snapshot.data.suggestions;
+                                                  return Container(
+                                                    height:
+                                                        getProportionateScreenHeight(
+                                                            250),
+                                                    child: ListView.builder(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      itemCount: s.length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int index) {
+                                                        return ProductCard(
+                                                            product: s[index]);
+                                                      },
+                                                    ),
+                                                  );
+                                                } else {
+                                                  return Container();
+                                                }
+                                            }
+                                          }),
                                     ),
-                                  ),
                                   SizedBox(
                                       height: getProportionateScreenHeight(20)),
                                 ],
                               ),
                             ),
                           ),
-                          WidgetDialog(),
+                          const WidgetDialog(),
                           SizedBox(height: getProportionateScreenHeight(20)),
                         ],
                       );
                     }
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                 }
             }

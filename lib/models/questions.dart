@@ -177,11 +177,13 @@ class QuestionnaireState with ChangeNotifier {
   int questionId;
   int currentQuestionNo = 0;
   int totalQuestions = 1;
+  int searchID;
   String offer_ends;
   String brand;
   List<Map> questions = [];
   List<Map> survey = [];
   List<Survey_questions> survey_questions;
+  List<SuggestedProduct> suggestions;
 
   QuestionnaireState() {
     initializetimezone();
@@ -192,6 +194,7 @@ class QuestionnaireState with ChangeNotifier {
     totalQuestions = 1;
     questions = [];
     survey = [];
+    suggestions = [];
   }
 
   Future initializetimezone() async {

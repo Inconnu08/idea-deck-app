@@ -1,6 +1,5 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
@@ -9,7 +8,6 @@ import '../models/ads.dart';
 import '../models/questions.dart';
 import '../network/http.dart';
 import '../screens/questions.dart';
-import '../utils/notifications.dart';
 
 class VideoDetailScreen extends StatefulWidget {
   static String routeName = "/details";

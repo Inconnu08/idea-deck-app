@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:idea_deck/constants.dart';
+import 'package:idea_deck/screens/home.dart';
 import 'package:idea_deck/screens/profile.dart';
+import 'package:idea_deck/screens/video_details_by_id.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+// import 'package:timezone/timezone.dart' as tz;
 
 Future initializetimezone() async {
   tz.initializeTimeZones();
@@ -92,13 +94,14 @@ class NotificationService extends ChangeNotifier {
       {@required String time,
       @required int qid,
       @required String brand}) async {
-    await initializetimezone();
+    // await initializetimezone();
     // instantNofitication();
     //stylishNotification();
     // var locale = tz.getLocation('Bangladesh/Dhaka');
     // print(locale);
     // print('18/05/2021 9:31 PM');
     var d = DateFormat('d/M/yyyy h:m a').parse(time);
+    print(d);
     // print(d.day);
     // tz.TZDateTime zonedTime =
     //     tz.TZDateTime.local(d.year, d.month, d.day, d.hour, d.minute);
@@ -174,6 +177,9 @@ class NotificationService extends ChangeNotifier {
 
   Future notificationSelected(String payload) async {
     print('payload $payload');
-    Navigator.pushNamed(context, ProfileScreen.routeName);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => VideoDetailByIDScreen(vid:payload)),
+    );
   }
 }

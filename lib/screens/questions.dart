@@ -227,10 +227,10 @@ class _WidgetDialogState extends State<WidgetDialog> {
               barrierDismissible: false,
               builder: (BuildContext context) => AlertDialog(
                     title: Text("Survey",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                            color: kPrimaryColor, fontWeight: FontWeight.bold)),
                     content: Text(
                         "Would you like to complete a survey for an additional entry to the draw?"),
-                    // backgroundColor: this._color,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     actions: <Widget>[
@@ -246,8 +246,7 @@ class _WidgetDialogState extends State<WidgetDialog> {
                         child: Text("No"),
                         textColor: Colors.redAccent,
                         onPressed: () {
-                          Navigator.of(context)
-                              .popAndPushNamed(SurveyScreen.routeName);
+                          Navigator.of(context).pop();
                         },
                       ),
                     ],
@@ -258,9 +257,7 @@ class _WidgetDialogState extends State<WidgetDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 2,
-    );
+    return Container(height: 1);
   }
 }
 

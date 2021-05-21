@@ -6,22 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_paginator/flutter_paginator.dart';
 import 'package:http/http.dart';
-import 'package:idea_deck/database/shared_perf.dart';
-import 'package:idea_deck/models/leaderboard.dart';
-import 'package:idea_deck/network/api.dart';
-import 'package:idea_deck/network/connectivity.dart';
-import 'package:idea_deck/network/http.dart';
-import 'package:idea_deck/screens/profile.dart';
-import 'package:idea_deck/screens/survey.dart';
-import 'package:idea_deck/screens/video_details.dart';
-import 'package:idea_deck/utils/notifications.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import '../database/shared_perf.dart';
 import '../models/ads.dart';
+import '../models/leaderboard.dart';
+import '../network/api.dart';
+import '../network/connectivity.dart';
+import '../network/http.dart';
+import '../screens/profile.dart';
+import '../screens/video_details.dart';
 import '../size_config.dart';
 import '../theme.dart';
+import '../utils/notifications.dart';
 import '../widgets/search_field.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -51,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-        
+
     context.read<NotificationService>().context = context;
 
     print(SizeConfig.imageSizeMultiplier * 50);
@@ -404,8 +402,10 @@ class _LeaderBoardState extends State<LeaderBoard> {
 class AdvertisementFeed extends StatefulWidget {
   AdvertisementFeed({
     Key key,
+    this.vid,
   }) : super(key: key);
 
+  final String vid;
   @override
   _AdvertisementFeedState createState() => _AdvertisementFeedState();
 }
@@ -516,7 +516,7 @@ class _AdvertisementFeedState extends State<AdvertisementFeed> {
       }
 
       final response = await get(
-          Uri.parse('${baseURL}videos?page=$page&cat=$cat'),
+          Uri.parse('${baseURL}videos?page=$page&cat=$cat&id=${widget.vid}'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

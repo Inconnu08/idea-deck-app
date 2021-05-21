@@ -217,3 +217,41 @@ Future<bool> postAnswers(int id, String data) async {
         "Opps something went wrong!\nMake sure you have you have the latest app version.");
   }
 }
+
+Future<Questionnaire> fetchSuggustions(int id) async {
+  print(" fetchquestionnaire())");
+  ConnectionStatusSingleton connectionStatus =
+      ConnectionStatusSingleton.getInstance();
+
+  bool isConnected = await connectionStatus.checkConnection();
+
+  if (!isConnected) {
+    print("no internet status");
+    return Future.error("No internet connection");
+  }
+
+  try {
+    final response =
+        await get(Uri.parse('${baseURL}suggestions/$id'), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${sharedPrefs.token}',
+    });
+    if (response.statusCode == 200) {
+      print('200');
+      print(response.body);
+      return Questionnaire.fromJson(response.body);
+    } else {
+      print(response.body);
+      throw Exception(
+          'Opps, something went wrong!\nMake sure you have you have the latest app version.');
+    }
+  } on SocketException catch (e) {
+    print(e);
+    return Future.error("No internet connection");
+  } on Exception catch (e) {
+    print(e);
+    return Future.error(
+        "Opps something went wrong!\nMake sure you have you have the latest app version.");
+  }
+}
